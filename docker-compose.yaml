@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  my-resume:
+    image: luandnh1998/svelte-my-resume:latest
+    container_name: my-resume
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - proxy
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=proxy'
+      - 'traefik.http.routers.my-resume.entrypoints=websecure'
+      - 'traefik.http.routers.my-resume.tls=true'
+      - 'traefik.http.routers.my-resume.tls.certresolver=letsencrypt'
+      - 'traefik.http.routers.my-resume.rule=Host(`cv.luandnh.com`)'
+      - 'traefik.http.services.my-resume.loadbalancer.server.port=4173'
+
+networks:
+  proxy:
+    external: true
