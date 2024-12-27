@@ -22,6 +22,11 @@ function Sidebar($$payload) {
 function Skills($$payload) {
   $$payload.out += `<div class="box box-inner mb-0"><div class="row"><div class="col-lg-6"><p class="fw-bold">Backend</p> <ul><li>Golang, Gin, Bun</li> <li>Rest APIs, gRPC, Websocket</li></ul> <p class="fw-bold">Database</p> <ul><li>PostgreSQL, MySQL, MariaDB</li> <li>Elasticsearch, MongoDB</li></ul> <p class="fw-bold">Caching</p> <ul><li>Redis</li> <li>Memcache</li></ul> <p class="fw-bold">CI/CD</p> <ul><li>Github Action</li> <li>Jenkins</li></ul></div> <div class="col-lg-6"><p class="fw-bold">Message Queue</p> <ul><li>Redis PubSub</li> <li>RabbitMQ</li></ul> <p class="fw-bold">Other</p> <ul><li>Docker, Portainer</li> <li>Traefik</li> <li>Debezium</li> <li>Sentry</li></ul> <p class="fw-bold">Frontend</p> <ul><li>Svelte, SvelteKit, SvelteStrap</li> <li>Bootstrap 5</li> <li>HTML5, CSS3</li></ul></div></div></div>`;
 }
+function ToggleMode($$payload, $$props) {
+  push();
+  $$payload.out += `<div class="justify-content-center"><a href="javascript:void(0)" class="h4" aria-label="Toggle Mode" id="toggle-mode"><i class="feathericon-moon"></i></a></div>`;
+  pop();
+}
 function WorkExperience($$payload) {
   const each_array = ensure_array_like([
     "Microservices",
@@ -133,7 +138,9 @@ function _page($$payload, $$props) {
   push();
   $$payload.out += `<main class="main"><div class="container gutter-top gutter-bottom"><div class="row sticky-parent"><aside class="col-12 col-md-12 col-xl-3">`;
   Sidebar($$payload);
-  $$payload.out += `<!----></aside> <div class="col-12 col-md-12 col-xl-9"><div class="box-outer"><div class="pb-0 pb-sm-2"><h1 class="title title--h1 title__separate">About Me</h1> `;
+  $$payload.out += `<!----></aside> <div class="col-12 col-md-12 col-xl-9"><div class="box-outer"><div class="nav-container">`;
+  ToggleMode($$payload);
+  $$payload.out += `<!----></div> <div class="pb-0 pb-sm-2"><h1 class="title title--h1 title__separate">About Me</h1> `;
   AboutMe($$payload);
   $$payload.out += `<!----></div> <h2 class="title title--h2"><span class="box icon-box"><i class="font-icon feathericon-book-open"></i></span> Education</h2> `;
   Education($$payload);
@@ -148,4 +155,4 @@ function _page($$payload, $$props) {
 }
 
 export { _page as default };
-//# sourceMappingURL=_page.svelte-BrdYCSI0.js.map
+//# sourceMappingURL=_page.svelte-DwKcjOIh.js.map
