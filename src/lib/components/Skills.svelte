@@ -6,29 +6,23 @@
 				<li>Golang, Gin, Bun</li>
 				<li>Rest APIs, gRPC, Websocket</li>
 			</ul>
-			<p class="fw-bold">Frontend</p>
-			<ul>
-				<li>Svelte, SvelteKit, SvelteStrap</li>
-				<li>Bootstrap 5</li>
-				<li>HTML5, CSS3</li>
-			</ul>
 			<p class="fw-bold">Database</p>
 			<ul>
 				<li>PostgreSQL, MySQL, MariaDB</li>
 				<li>Elasticsearch, MongoDB</li>
 			</ul>
-            <p class="fw-bold">Caching</p>
+			<p class="fw-bold">Caching</p>
 			<ul>
 				<li>Redis</li>
 				<li>Memcache</li>
 			</ul>
-		</div>
-		<div class="col-lg-6">
 			<p class="fw-bold">CI/CD</p>
 			<ul>
 				<li>Github Action</li>
 				<li>Jenkins</li>
 			</ul>
+		</div>
+		<div class="col-lg-6">
 			<p class="fw-bold">Message Queue</p>
 			<ul>
 				<li>Redis PubSub</li>
@@ -40,6 +34,12 @@
 				<li>Traefik</li>
 				<li>Debezium</li>
 				<li>Sentry</li>
+			</ul>
+			<p class="fw-bold">Frontend</p>
+			<ul>
+				<li>Svelte, SvelteKit, SvelteStrap</li>
+				<li>Bootstrap 5</li>
+				<li>HTML5, CSS3</li>
 			</ul>
 		</div>
 	</div>

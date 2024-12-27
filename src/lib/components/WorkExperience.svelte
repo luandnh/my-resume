@@ -142,9 +142,6 @@
 	<h5 class="title title--h4 timeline__title">Wisky</h5>
 	<span class="timeline__period">12/2019 - 06/2020</span>
 	<h4 class="title title--h4">Intern Full Stack Developer</h4>
-	<div class="mb-2">
-		<span class="timeline__period">2020 — 2023</span>
-	</div>
 	<span class="fw-bold">Responsibilities:</span>
 	<ul>
 		<li>Develop and maintain front-end and back-end components of web applications</li>
