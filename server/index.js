@@ -1,6 +1,7 @@
-import { c as create_ssr_component, s as setContext, v as validate_component, m as missing_component, n as noop, a as safe_not_equal } from './chunks/ssr-utOI7GfC.js';
-import { d as decode_pathname, h as has_data_suffix, s as strip_data_suffix, a as decode_params, n as normalize_path, b as disable_search, c as add_data_suffix, m as make_trackable, r as resolve } from './chunks/exports-DuWZopOC.js';
+import { d as define_property, a as array_from, g as get_descriptor, s as safe_equals, i as is_array, e as equals, b as decode_pathname, h as has_data_suffix, c as strip_data_suffix, f as decode_params, n as normalize_path, j as disable_search, w as writable, k as add_data_suffix, m as make_trackable, r as readable, l as resolve } from './chunks/exports-CYw-LBl3.js';
+import { r as render, H as HYDRATION_START, a as HYDRATION_ERROR, b as HYDRATION_END, p as push$1, s as setContext, c as pop$1 } from './chunks/index-BcvDYVOv.js';
 
+const BROWSER = false;
 let base = "";
 let assets = base;
 const initial = { base, assets };
@@ -20,96 +21,1375 @@ function set_public_env(environment) {
 function set_safe_public_env(environment) {
   safe_public_env = environment;
 }
-function afterUpdate() {
+const DERIVED = 1 << 1;
+const EFFECT = 1 << 2;
+const RENDER_EFFECT = 1 << 3;
+const BLOCK_EFFECT = 1 << 4;
+const BRANCH_EFFECT = 1 << 5;
+const ROOT_EFFECT = 1 << 6;
+const BOUNDARY_EFFECT = 1 << 7;
+const UNOWNED = 1 << 8;
+const DISCONNECTED = 1 << 9;
+const CLEAN = 1 << 10;
+const DIRTY = 1 << 11;
+const MAYBE_DIRTY = 1 << 12;
+const INERT = 1 << 13;
+const DESTROYED = 1 << 14;
+const EFFECT_RAN = 1 << 15;
+const EFFECT_TRANSPARENT = 1 << 16;
+const HEAD_EFFECT = 1 << 19;
+const EFFECT_HAS_DERIVED = 1 << 20;
+const LEGACY_PROPS = Symbol("legacy props");
+function effect_update_depth_exceeded() {
+  {
+    throw new Error(`https://svelte.dev/e/effect_update_depth_exceeded`);
+  }
 }
-const Root = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let { stores } = $$props;
-  let { page } = $$props;
-  let { constructors } = $$props;
-  let { components = [] } = $$props;
-  let { form } = $$props;
-  let { data_0 = null } = $$props;
-  let { data_1 = null } = $$props;
+function hydration_failed() {
+  {
+    throw new Error(`https://svelte.dev/e/hydration_failed`);
+  }
+}
+function state_unsafe_local_read() {
+  {
+    throw new Error(`https://svelte.dev/e/state_unsafe_local_read`);
+  }
+}
+function state_unsafe_mutation() {
+  {
+    throw new Error(`https://svelte.dev/e/state_unsafe_mutation`);
+  }
+}
+let legacy_mode_flag = false;
+function source(v, stack) {
+  var signal = {
+    f: 0,
+    // TODO ideally we could skip this altogether, but it causes type errors
+    v,
+    reactions: null,
+    equals,
+    version: 0
+  };
+  return signal;
+}
+// @__NO_SIDE_EFFECTS__
+function mutable_source(initial_value, immutable = false) {
+  const s = source(initial_value);
+  if (!immutable) {
+    s.equals = safe_equals;
+  }
+  return s;
+}
+function set(source2, value) {
+  if (active_reaction !== null && is_runes() && (active_reaction.f & (DERIVED | BLOCK_EFFECT)) !== 0 && // If the source was created locally within the current derived, then
+  // we allow the mutation.
+  (derived_sources === null || !derived_sources.includes(source2))) {
+    state_unsafe_mutation();
+  }
+  return internal_set(source2, value);
+}
+function internal_set(source2, value) {
+  if (!source2.equals(value)) {
+    source2.v = value;
+    source2.version = increment_version();
+    mark_reactions(source2, DIRTY);
+    if (active_effect !== null && (active_effect.f & CLEAN) !== 0 && (active_effect.f & BRANCH_EFFECT) === 0) {
+      if (new_deps !== null && new_deps.includes(source2)) {
+        set_signal_status(active_effect, DIRTY);
+        schedule_effect(active_effect);
+      } else {
+        if (untracked_writes === null) {
+          set_untracked_writes([source2]);
+        } else {
+          untracked_writes.push(source2);
+        }
+      }
+    }
+  }
+  return value;
+}
+function mark_reactions(signal, status) {
+  var reactions = signal.reactions;
+  if (reactions === null) return;
+  var length = reactions.length;
+  for (var i = 0; i < length; i++) {
+    var reaction = reactions[i];
+    var flags = reaction.f;
+    if ((flags & DIRTY) !== 0) continue;
+    set_signal_status(reaction, status);
+    if ((flags & (CLEAN | UNOWNED)) !== 0) {
+      if ((flags & DERIVED) !== 0) {
+        mark_reactions(
+          /** @type {Derived} */
+          reaction,
+          MAYBE_DIRTY
+        );
+      } else {
+        schedule_effect(
+          /** @type {Effect} */
+          reaction
+        );
+      }
+    }
+  }
+}
+function hydration_mismatch(location) {
+  {
+    console.warn(`https://svelte.dev/e/hydration_mismatch`);
+  }
+}
+let hydrating = false;
+function set_hydrating(value) {
+  hydrating = value;
+}
+let hydrate_node;
+function set_hydrate_node(node) {
+  if (node === null) {
+    hydration_mismatch();
+    throw HYDRATION_ERROR;
+  }
+  return hydrate_node = node;
+}
+function hydrate_next() {
+  return set_hydrate_node(
+    /** @type {TemplateNode} */
+    /* @__PURE__ */ get_next_sibling(hydrate_node)
+  );
+}
+var $window;
+var first_child_getter;
+var next_sibling_getter;
+function init_operations() {
+  if ($window !== void 0) {
+    return;
+  }
+  $window = window;
+  var element_prototype = Element.prototype;
+  var node_prototype = Node.prototype;
+  first_child_getter = get_descriptor(node_prototype, "firstChild").get;
+  next_sibling_getter = get_descriptor(node_prototype, "nextSibling").get;
+  element_prototype.__click = void 0;
+  element_prototype.__className = "";
+  element_prototype.__attributes = null;
+  element_prototype.__styles = null;
+  element_prototype.__e = void 0;
+  Text.prototype.__t = void 0;
+}
+function create_text(value = "") {
+  return document.createTextNode(value);
+}
+// @__NO_SIDE_EFFECTS__
+function get_first_child(node) {
+  return first_child_getter.call(node);
+}
+// @__NO_SIDE_EFFECTS__
+function get_next_sibling(node) {
+  return next_sibling_getter.call(node);
+}
+function clear_text_content(node) {
+  node.textContent = "";
+}
+function destroy_derived_children(derived) {
+  var children = derived.children;
+  if (children !== null) {
+    derived.children = null;
+    for (var i = 0; i < children.length; i += 1) {
+      var child = children[i];
+      if ((child.f & DERIVED) !== 0) {
+        destroy_derived(
+          /** @type {Derived} */
+          child
+        );
+      } else {
+        destroy_effect(
+          /** @type {Effect} */
+          child
+        );
+      }
+    }
+  }
+}
+function get_derived_parent_effect(derived) {
+  var parent = derived.parent;
+  while (parent !== null) {
+    if ((parent.f & DERIVED) === 0) {
+      return (
+        /** @type {Effect} */
+        parent
+      );
+    }
+    parent = parent.parent;
+  }
+  return null;
+}
+function execute_derived(derived) {
+  var value;
+  var prev_active_effect = active_effect;
+  set_active_effect(get_derived_parent_effect(derived));
+  {
+    try {
+      destroy_derived_children(derived);
+      value = update_reaction(derived);
+    } finally {
+      set_active_effect(prev_active_effect);
+    }
+  }
+  return value;
+}
+function update_derived(derived) {
+  var value = execute_derived(derived);
+  var status = (skip_reaction || (derived.f & UNOWNED) !== 0) && derived.deps !== null ? MAYBE_DIRTY : CLEAN;
+  set_signal_status(derived, status);
+  if (!derived.equals(value)) {
+    derived.v = value;
+    derived.version = increment_version();
+  }
+}
+function destroy_derived(derived) {
+  destroy_derived_children(derived);
+  remove_reactions(derived, 0);
+  set_signal_status(derived, DESTROYED);
+  derived.v = derived.children = derived.deps = derived.ctx = derived.reactions = null;
+}
+function push_effect(effect2, parent_effect) {
+  var parent_last = parent_effect.last;
+  if (parent_last === null) {
+    parent_effect.last = parent_effect.first = effect2;
+  } else {
+    parent_last.next = effect2;
+    effect2.prev = parent_last;
+    parent_effect.last = effect2;
+  }
+}
+function create_effect(type, fn, sync, push2 = true) {
+  var is_root = (type & ROOT_EFFECT) !== 0;
+  var parent_effect = active_effect;
+  var effect2 = {
+    ctx: component_context,
+    deps: null,
+    deriveds: null,
+    nodes_start: null,
+    nodes_end: null,
+    f: type | DIRTY,
+    first: null,
+    fn,
+    last: null,
+    next: null,
+    parent: is_root ? null : parent_effect,
+    prev: null,
+    teardown: null,
+    transitions: null,
+    version: 0
+  };
+  if (sync) {
+    var previously_flushing_effect = is_flushing_effect;
+    try {
+      set_is_flushing_effect(true);
+      update_effect(effect2);
+      effect2.f |= EFFECT_RAN;
+    } catch (e) {
+      destroy_effect(effect2);
+      throw e;
+    } finally {
+      set_is_flushing_effect(previously_flushing_effect);
+    }
+  } else if (fn !== null) {
+    schedule_effect(effect2);
+  }
+  var inert = sync && effect2.deps === null && effect2.first === null && effect2.nodes_start === null && effect2.teardown === null && (effect2.f & EFFECT_HAS_DERIVED) === 0;
+  if (!inert && !is_root && push2) {
+    if (parent_effect !== null) {
+      push_effect(effect2, parent_effect);
+    }
+    if (active_reaction !== null && (active_reaction.f & DERIVED) !== 0) {
+      var derived = (
+        /** @type {Derived} */
+        active_reaction
+      );
+      (derived.children ??= []).push(effect2);
+    }
+  }
+  return effect2;
+}
+function component_root(fn) {
+  const effect2 = create_effect(ROOT_EFFECT, fn, true);
+  return (options2 = {}) => {
+    return new Promise((fulfil) => {
+      if (options2.outro) {
+        pause_effect(effect2, () => {
+          destroy_effect(effect2);
+          fulfil(void 0);
+        });
+      } else {
+        destroy_effect(effect2);
+        fulfil(void 0);
+      }
+    });
+  };
+}
+function effect(fn) {
+  return create_effect(EFFECT, fn, false);
+}
+function branch(fn, push2 = true) {
+  return create_effect(RENDER_EFFECT | BRANCH_EFFECT, fn, true, push2);
+}
+function execute_effect_teardown(effect2) {
+  var teardown = effect2.teardown;
+  if (teardown !== null) {
+    const previous_reaction = active_reaction;
+    set_active_reaction(null);
+    try {
+      teardown.call(null);
+    } finally {
+      set_active_reaction(previous_reaction);
+    }
+  }
+}
+function destroy_effect_deriveds(signal) {
+  var deriveds = signal.deriveds;
+  if (deriveds !== null) {
+    signal.deriveds = null;
+    for (var i = 0; i < deriveds.length; i += 1) {
+      destroy_derived(deriveds[i]);
+    }
+  }
+}
+function destroy_effect_children(signal, remove_dom = false) {
+  var effect2 = signal.first;
+  signal.first = signal.last = null;
+  while (effect2 !== null) {
+    var next = effect2.next;
+    destroy_effect(effect2, remove_dom);
+    effect2 = next;
+  }
+}
+function destroy_block_effect_children(signal) {
+  var effect2 = signal.first;
+  while (effect2 !== null) {
+    var next = effect2.next;
+    if ((effect2.f & BRANCH_EFFECT) === 0) {
+      destroy_effect(effect2);
+    }
+    effect2 = next;
+  }
+}
+function destroy_effect(effect2, remove_dom = true) {
+  var removed = false;
+  if ((remove_dom || (effect2.f & HEAD_EFFECT) !== 0) && effect2.nodes_start !== null) {
+    var node = effect2.nodes_start;
+    var end = effect2.nodes_end;
+    while (node !== null) {
+      var next = node === end ? null : (
+        /** @type {TemplateNode} */
+        /* @__PURE__ */ get_next_sibling(node)
+      );
+      node.remove();
+      node = next;
+    }
+    removed = true;
+  }
+  destroy_effect_children(effect2, remove_dom && !removed);
+  destroy_effect_deriveds(effect2);
+  remove_reactions(effect2, 0);
+  set_signal_status(effect2, DESTROYED);
+  var transitions = effect2.transitions;
+  if (transitions !== null) {
+    for (const transition of transitions) {
+      transition.stop();
+    }
+  }
+  execute_effect_teardown(effect2);
+  var parent = effect2.parent;
+  if (parent !== null && parent.first !== null) {
+    unlink_effect(effect2);
+  }
+  effect2.next = effect2.prev = effect2.teardown = effect2.ctx = effect2.deps = effect2.fn = effect2.nodes_start = effect2.nodes_end = null;
+}
+function unlink_effect(effect2) {
+  var parent = effect2.parent;
+  var prev = effect2.prev;
+  var next = effect2.next;
+  if (prev !== null) prev.next = next;
+  if (next !== null) next.prev = prev;
+  if (parent !== null) {
+    if (parent.first === effect2) parent.first = next;
+    if (parent.last === effect2) parent.last = prev;
+  }
+}
+function pause_effect(effect2, callback) {
+  var transitions = [];
+  pause_children(effect2, transitions, true);
+  run_out_transitions(transitions, () => {
+    destroy_effect(effect2);
+    callback();
+  });
+}
+function run_out_transitions(transitions, fn) {
+  var remaining = transitions.length;
+  if (remaining > 0) {
+    var check = () => --remaining || fn();
+    for (var transition of transitions) {
+      transition.out(check);
+    }
+  } else {
+    fn();
+  }
+}
+function pause_children(effect2, transitions, local) {
+  if ((effect2.f & INERT) !== 0) return;
+  effect2.f ^= INERT;
+  if (effect2.transitions !== null) {
+    for (const transition of effect2.transitions) {
+      if (transition.is_global || local) {
+        transitions.push(transition);
+      }
+    }
+  }
+  var child = effect2.first;
+  while (child !== null) {
+    var sibling = child.next;
+    var transparent = (child.f & EFFECT_TRANSPARENT) !== 0 || (child.f & BRANCH_EFFECT) !== 0;
+    pause_children(child, transitions, transparent ? local : false);
+    child = sibling;
+  }
+}
+function flush_tasks() {
+}
+const FLUSH_MICROTASK = 0;
+const FLUSH_SYNC = 1;
+let is_throwing_error = false;
+let scheduler_mode = FLUSH_MICROTASK;
+let is_micro_task_queued = false;
+let last_scheduled_effect = null;
+let is_flushing_effect = false;
+function set_is_flushing_effect(value) {
+  is_flushing_effect = value;
+}
+let queued_root_effects = [];
+let flush_count = 0;
+let active_reaction = null;
+function set_active_reaction(reaction) {
+  active_reaction = reaction;
+}
+let active_effect = null;
+function set_active_effect(effect2) {
+  active_effect = effect2;
+}
+let derived_sources = null;
+let new_deps = null;
+let skipped_deps = 0;
+let untracked_writes = null;
+function set_untracked_writes(value) {
+  untracked_writes = value;
+}
+let current_version = 1;
+let skip_reaction = false;
+let component_context = null;
+function increment_version() {
+  return ++current_version;
+}
+function is_runes() {
+  return !legacy_mode_flag;
+}
+function check_dirtiness(reaction) {
+  var flags = reaction.f;
+  if ((flags & DIRTY) !== 0) {
+    return true;
+  }
+  if ((flags & MAYBE_DIRTY) !== 0) {
+    var dependencies = reaction.deps;
+    var is_unowned = (flags & UNOWNED) !== 0;
+    if (dependencies !== null) {
+      var i;
+      if ((flags & DISCONNECTED) !== 0) {
+        for (i = 0; i < dependencies.length; i++) {
+          (dependencies[i].reactions ??= []).push(reaction);
+        }
+        reaction.f ^= DISCONNECTED;
+      }
+      for (i = 0; i < dependencies.length; i++) {
+        var dependency = dependencies[i];
+        if (check_dirtiness(
+          /** @type {Derived} */
+          dependency
+        )) {
+          update_derived(
+            /** @type {Derived} */
+            dependency
+          );
+        }
+        if (is_unowned && active_effect !== null && !skip_reaction && !dependency?.reactions?.includes(reaction)) {
+          (dependency.reactions ??= []).push(reaction);
+        }
+        if (dependency.version > reaction.version) {
+          return true;
+        }
+      }
+    }
+    if (!is_unowned || active_effect !== null && !skip_reaction) {
+      set_signal_status(reaction, CLEAN);
+    }
+  }
+  return false;
+}
+function propagate_error(error, effect2) {
+  var current = effect2;
+  while (current !== null) {
+    if ((current.f & BOUNDARY_EFFECT) !== 0) {
+      try {
+        current.fn(error);
+        return;
+      } catch {
+        current.f ^= BOUNDARY_EFFECT;
+      }
+    }
+    current = current.parent;
+  }
+  is_throwing_error = false;
+  throw error;
+}
+function should_rethrow_error(effect2) {
+  return (effect2.f & DESTROYED) === 0 && (effect2.parent === null || (effect2.parent.f & BOUNDARY_EFFECT) === 0);
+}
+function handle_error(error, effect2, previous_effect, component_context2) {
+  if (is_throwing_error) {
+    if (previous_effect === null) {
+      is_throwing_error = false;
+    }
+    if (should_rethrow_error(effect2)) {
+      throw error;
+    }
+    return;
+  }
+  if (previous_effect !== null) {
+    is_throwing_error = true;
+  }
+  {
+    propagate_error(error, effect2);
+    return;
+  }
+}
+function update_reaction(reaction) {
+  var previous_deps = new_deps;
+  var previous_skipped_deps = skipped_deps;
+  var previous_untracked_writes = untracked_writes;
+  var previous_reaction = active_reaction;
+  var previous_skip_reaction = skip_reaction;
+  var prev_derived_sources = derived_sources;
+  var previous_component_context = component_context;
+  var flags = reaction.f;
+  new_deps = /** @type {null | Value[]} */
+  null;
+  skipped_deps = 0;
+  untracked_writes = null;
+  active_reaction = (flags & (BRANCH_EFFECT | ROOT_EFFECT)) === 0 ? reaction : null;
+  skip_reaction = !is_flushing_effect && (flags & UNOWNED) !== 0;
+  derived_sources = null;
+  component_context = reaction.ctx;
+  try {
+    var result = (
+      /** @type {Function} */
+      (0, reaction.fn)()
+    );
+    var deps = reaction.deps;
+    if (new_deps !== null) {
+      var i;
+      remove_reactions(reaction, skipped_deps);
+      if (deps !== null && skipped_deps > 0) {
+        deps.length = skipped_deps + new_deps.length;
+        for (i = 0; i < new_deps.length; i++) {
+          deps[skipped_deps + i] = new_deps[i];
+        }
+      } else {
+        reaction.deps = deps = new_deps;
+      }
+      if (!skip_reaction) {
+        for (i = skipped_deps; i < deps.length; i++) {
+          (deps[i].reactions ??= []).push(reaction);
+        }
+      }
+    } else if (deps !== null && skipped_deps < deps.length) {
+      remove_reactions(reaction, skipped_deps);
+      deps.length = skipped_deps;
+    }
+    return result;
+  } finally {
+    new_deps = previous_deps;
+    skipped_deps = previous_skipped_deps;
+    untracked_writes = previous_untracked_writes;
+    active_reaction = previous_reaction;
+    skip_reaction = previous_skip_reaction;
+    derived_sources = prev_derived_sources;
+    component_context = previous_component_context;
+  }
+}
+function remove_reaction(signal, dependency) {
+  let reactions = dependency.reactions;
+  if (reactions !== null) {
+    var index = reactions.indexOf(signal);
+    if (index !== -1) {
+      var new_length = reactions.length - 1;
+      if (new_length === 0) {
+        reactions = dependency.reactions = null;
+      } else {
+        reactions[index] = reactions[new_length];
+        reactions.pop();
+      }
+    }
+  }
+  if (reactions === null && (dependency.f & DERIVED) !== 0 && // Destroying a child effect while updating a parent effect can cause a dependency to appear
+  // to be unused, when in fact it is used by the currently-updating parent. Checking `new_deps`
+  // allows us to skip the expensive work of disconnecting and immediately reconnecting it
+  (new_deps === null || !new_deps.includes(dependency))) {
+    set_signal_status(dependency, MAYBE_DIRTY);
+    if ((dependency.f & (UNOWNED | DISCONNECTED)) === 0) {
+      dependency.f ^= DISCONNECTED;
+    }
+    remove_reactions(
+      /** @type {Derived} **/
+      dependency,
+      0
+    );
+  }
+}
+function remove_reactions(signal, start_index) {
+  var dependencies = signal.deps;
+  if (dependencies === null) return;
+  for (var i = start_index; i < dependencies.length; i++) {
+    remove_reaction(signal, dependencies[i]);
+  }
+}
+function update_effect(effect2) {
+  var flags = effect2.f;
+  if ((flags & DESTROYED) !== 0) {
+    return;
+  }
+  set_signal_status(effect2, CLEAN);
+  var previous_effect = active_effect;
+  var previous_component_context = component_context;
+  active_effect = effect2;
+  try {
+    if ((flags & BLOCK_EFFECT) !== 0) {
+      destroy_block_effect_children(effect2);
+    } else {
+      destroy_effect_children(effect2);
+    }
+    destroy_effect_deriveds(effect2);
+    execute_effect_teardown(effect2);
+    var teardown = update_reaction(effect2);
+    effect2.teardown = typeof teardown === "function" ? teardown : null;
+    effect2.version = current_version;
+    if (BROWSER) ;
+  } catch (error) {
+    handle_error(error, effect2, previous_effect, previous_component_context || effect2.ctx);
+  } finally {
+    active_effect = previous_effect;
+  }
+}
+function infinite_loop_guard() {
+  if (flush_count > 1e3) {
+    flush_count = 0;
+    try {
+      effect_update_depth_exceeded();
+    } catch (error) {
+      if (last_scheduled_effect !== null) {
+        {
+          handle_error(error, last_scheduled_effect, null);
+        }
+      } else {
+        throw error;
+      }
+    }
+  }
+  flush_count++;
+}
+function flush_queued_root_effects(root_effects) {
+  var length = root_effects.length;
+  if (length === 0) {
+    return;
+  }
+  infinite_loop_guard();
+  var previously_flushing_effect = is_flushing_effect;
+  is_flushing_effect = true;
+  try {
+    for (var i = 0; i < length; i++) {
+      var effect2 = root_effects[i];
+      if ((effect2.f & CLEAN) === 0) {
+        effect2.f ^= CLEAN;
+      }
+      var collected_effects = [];
+      process_effects(effect2, collected_effects);
+      flush_queued_effects(collected_effects);
+    }
+  } finally {
+    is_flushing_effect = previously_flushing_effect;
+  }
+}
+function flush_queued_effects(effects) {
+  var length = effects.length;
+  if (length === 0) return;
+  for (var i = 0; i < length; i++) {
+    var effect2 = effects[i];
+    if ((effect2.f & (DESTROYED | INERT)) === 0) {
+      try {
+        if (check_dirtiness(effect2)) {
+          update_effect(effect2);
+          if (effect2.deps === null && effect2.first === null && effect2.nodes_start === null) {
+            if (effect2.teardown === null) {
+              unlink_effect(effect2);
+            } else {
+              effect2.fn = null;
+            }
+          }
+        }
+      } catch (error) {
+        handle_error(error, effect2, null, effect2.ctx);
+      }
+    }
+  }
+}
+function process_deferred() {
+  is_micro_task_queued = false;
+  if (flush_count > 1001) {
+    return;
+  }
+  const previous_queued_root_effects = queued_root_effects;
+  queued_root_effects = [];
+  flush_queued_root_effects(previous_queued_root_effects);
+  if (!is_micro_task_queued) {
+    flush_count = 0;
+    last_scheduled_effect = null;
+  }
+}
+function schedule_effect(signal) {
+  if (scheduler_mode === FLUSH_MICROTASK) {
+    if (!is_micro_task_queued) {
+      is_micro_task_queued = true;
+      queueMicrotask(process_deferred);
+    }
+  }
+  last_scheduled_effect = signal;
+  var effect2 = signal;
+  while (effect2.parent !== null) {
+    effect2 = effect2.parent;
+    var flags = effect2.f;
+    if ((flags & (ROOT_EFFECT | BRANCH_EFFECT)) !== 0) {
+      if ((flags & CLEAN) === 0) return;
+      effect2.f ^= CLEAN;
+    }
+  }
+  queued_root_effects.push(effect2);
+}
+function process_effects(effect2, collected_effects) {
+  var current_effect = effect2.first;
+  var effects = [];
+  main_loop: while (current_effect !== null) {
+    var flags = current_effect.f;
+    var is_branch = (flags & BRANCH_EFFECT) !== 0;
+    var is_skippable_branch = is_branch && (flags & CLEAN) !== 0;
+    var sibling = current_effect.next;
+    if (!is_skippable_branch && (flags & INERT) === 0) {
+      if ((flags & RENDER_EFFECT) !== 0) {
+        if (is_branch) {
+          current_effect.f ^= CLEAN;
+        } else {
+          try {
+            if (check_dirtiness(current_effect)) {
+              update_effect(current_effect);
+            }
+          } catch (error) {
+            handle_error(error, current_effect, null, current_effect.ctx);
+          }
+        }
+        var child = current_effect.first;
+        if (child !== null) {
+          current_effect = child;
+          continue;
+        }
+      } else if ((flags & EFFECT) !== 0) {
+        effects.push(current_effect);
+      }
+    }
+    if (sibling === null) {
+      let parent = current_effect.parent;
+      while (parent !== null) {
+        if (effect2 === parent) {
+          break main_loop;
+        }
+        var parent_sibling = parent.next;
+        if (parent_sibling !== null) {
+          current_effect = parent_sibling;
+          continue main_loop;
+        }
+        parent = parent.parent;
+      }
+    }
+    current_effect = sibling;
+  }
+  for (var i = 0; i < effects.length; i++) {
+    child = effects[i];
+    collected_effects.push(child);
+    process_effects(child, collected_effects);
+  }
+}
+function flush_sync(fn) {
+  var previous_scheduler_mode = scheduler_mode;
+  var previous_queued_root_effects = queued_root_effects;
+  try {
+    infinite_loop_guard();
+    const root_effects = [];
+    scheduler_mode = FLUSH_SYNC;
+    queued_root_effects = root_effects;
+    is_micro_task_queued = false;
+    flush_queued_root_effects(previous_queued_root_effects);
+    var result = fn?.();
+    flush_tasks();
+    if (queued_root_effects.length > 0 || root_effects.length > 0) {
+      flush_sync();
+    }
+    flush_count = 0;
+    last_scheduled_effect = null;
+    if (BROWSER) ;
+    return result;
+  } finally {
+    scheduler_mode = previous_scheduler_mode;
+    queued_root_effects = previous_queued_root_effects;
+  }
+}
+function get(signal) {
+  var flags = signal.f;
+  var is_derived = (flags & DERIVED) !== 0;
+  if (is_derived && (flags & DESTROYED) !== 0) {
+    var value = execute_derived(
+      /** @type {Derived} */
+      signal
+    );
+    destroy_derived(
+      /** @type {Derived} */
+      signal
+    );
+    return value;
+  }
+  if (active_reaction !== null) {
+    if (derived_sources !== null && derived_sources.includes(signal)) {
+      state_unsafe_local_read();
+    }
+    var deps = active_reaction.deps;
+    if (new_deps === null && deps !== null && deps[skipped_deps] === signal) {
+      skipped_deps++;
+    } else if (new_deps === null) {
+      new_deps = [signal];
+    } else {
+      new_deps.push(signal);
+    }
+    if (untracked_writes !== null && active_effect !== null && (active_effect.f & CLEAN) !== 0 && (active_effect.f & BRANCH_EFFECT) === 0 && untracked_writes.includes(signal)) {
+      set_signal_status(active_effect, DIRTY);
+      schedule_effect(active_effect);
+    }
+  } else if (is_derived && /** @type {Derived} */
+  signal.deps === null) {
+    var derived = (
+      /** @type {Derived} */
+      signal
+    );
+    var parent = derived.parent;
+    var target = derived;
+    while (parent !== null) {
+      if ((parent.f & DERIVED) !== 0) {
+        var parent_derived = (
+          /** @type {Derived} */
+          parent
+        );
+        target = parent_derived;
+        parent = parent_derived.parent;
+      } else {
+        var parent_effect = (
+          /** @type {Effect} */
+          parent
+        );
+        if (!parent_effect.deriveds?.includes(target)) {
+          (parent_effect.deriveds ??= []).push(target);
+        }
+        break;
+      }
+    }
+  }
+  if (is_derived) {
+    derived = /** @type {Derived} */
+    signal;
+    if (check_dirtiness(derived)) {
+      update_derived(derived);
+    }
+  }
+  return signal.v;
+}
+const STATUS_MASK = ~(DIRTY | MAYBE_DIRTY | CLEAN);
+function set_signal_status(signal, status) {
+  signal.f = signal.f & STATUS_MASK | status;
+}
+function push(props, runes = false, fn) {
+  component_context = {
+    p: component_context,
+    c: null,
+    e: null,
+    m: false,
+    s: props,
+    x: null,
+    l: null
+  };
+}
+function pop(component) {
+  const context_stack_item = component_context;
+  if (context_stack_item !== null) {
+    const component_effects = context_stack_item.e;
+    if (component_effects !== null) {
+      var previous_effect = active_effect;
+      var previous_reaction = active_reaction;
+      context_stack_item.e = null;
+      try {
+        for (var i = 0; i < component_effects.length; i++) {
+          var component_effect = component_effects[i];
+          set_active_effect(component_effect.effect);
+          set_active_reaction(component_effect.reaction);
+          effect(component_effect.fn);
+        }
+      } finally {
+        set_active_effect(previous_effect);
+        set_active_reaction(previous_reaction);
+      }
+    }
+    component_context = context_stack_item.p;
+    context_stack_item.m = true;
+  }
+  return (
+    /** @type {T} */
+    {}
+  );
+}
+const PASSIVE_EVENTS = ["touchstart", "touchmove"];
+function is_passive_event(name) {
+  return PASSIVE_EVENTS.includes(name);
+}
+const all_registered_events = /* @__PURE__ */ new Set();
+const root_event_handles = /* @__PURE__ */ new Set();
+function handle_event_propagation(event) {
+  var handler_element = this;
+  var owner_document = (
+    /** @type {Node} */
+    handler_element.ownerDocument
+  );
+  var event_name = event.type;
+  var path = event.composedPath?.() || [];
+  var current_target = (
+    /** @type {null | Element} */
+    path[0] || event.target
+  );
+  var path_idx = 0;
+  var handled_at = event.__root;
+  if (handled_at) {
+    var at_idx = path.indexOf(handled_at);
+    if (at_idx !== -1 && (handler_element === document || handler_element === /** @type {any} */
+    window)) {
+      event.__root = handler_element;
+      return;
+    }
+    var handler_idx = path.indexOf(handler_element);
+    if (handler_idx === -1) {
+      return;
+    }
+    if (at_idx <= handler_idx) {
+      path_idx = at_idx;
+    }
+  }
+  current_target = /** @type {Element} */
+  path[path_idx] || event.target;
+  if (current_target === handler_element) return;
+  define_property(event, "currentTarget", {
+    configurable: true,
+    get() {
+      return current_target || owner_document;
+    }
+  });
+  var previous_reaction = active_reaction;
+  var previous_effect = active_effect;
+  set_active_reaction(null);
+  set_active_effect(null);
+  try {
+    var throw_error;
+    var other_errors = [];
+    while (current_target !== null) {
+      var parent_element = current_target.assignedSlot || current_target.parentNode || /** @type {any} */
+      current_target.host || null;
+      try {
+        var delegated = current_target["__" + event_name];
+        if (delegated !== void 0 && !/** @type {any} */
+        current_target.disabled) {
+          if (is_array(delegated)) {
+            var [fn, ...data] = delegated;
+            fn.apply(current_target, [event, ...data]);
+          } else {
+            delegated.call(current_target, event);
+          }
+        }
+      } catch (error) {
+        if (throw_error) {
+          other_errors.push(error);
+        } else {
+          throw_error = error;
+        }
+      }
+      if (event.cancelBubble || parent_element === handler_element || parent_element === null) {
+        break;
+      }
+      current_target = parent_element;
+    }
+    if (throw_error) {
+      for (let error of other_errors) {
+        queueMicrotask(() => {
+          throw error;
+        });
+      }
+      throw throw_error;
+    }
+  } finally {
+    event.__root = handler_element;
+    delete event.currentTarget;
+    set_active_reaction(previous_reaction);
+    set_active_effect(previous_effect);
+  }
+}
+function assign_nodes(start, end) {
+  var effect2 = (
+    /** @type {Effect} */
+    active_effect
+  );
+  if (effect2.nodes_start === null) {
+    effect2.nodes_start = start;
+    effect2.nodes_end = end;
+  }
+}
+function mount(component, options2) {
+  return _mount(component, options2);
+}
+function hydrate(component, options2) {
+  init_operations();
+  options2.intro = options2.intro ?? false;
+  const target = options2.target;
+  const was_hydrating = hydrating;
+  const previous_hydrate_node = hydrate_node;
+  try {
+    var anchor = (
+      /** @type {TemplateNode} */
+      /* @__PURE__ */ get_first_child(target)
+    );
+    while (anchor && (anchor.nodeType !== 8 || /** @type {Comment} */
+    anchor.data !== HYDRATION_START)) {
+      anchor = /** @type {TemplateNode} */
+      /* @__PURE__ */ get_next_sibling(anchor);
+    }
+    if (!anchor) {
+      throw HYDRATION_ERROR;
+    }
+    set_hydrating(true);
+    set_hydrate_node(
+      /** @type {Comment} */
+      anchor
+    );
+    hydrate_next();
+    const instance = _mount(component, { ...options2, anchor });
+    if (hydrate_node === null || hydrate_node.nodeType !== 8 || /** @type {Comment} */
+    hydrate_node.data !== HYDRATION_END) {
+      hydration_mismatch();
+      throw HYDRATION_ERROR;
+    }
+    set_hydrating(false);
+    return (
+      /**  @type {Exports} */
+      instance
+    );
+  } catch (error) {
+    if (error === HYDRATION_ERROR) {
+      if (options2.recover === false) {
+        hydration_failed();
+      }
+      init_operations();
+      clear_text_content(target);
+      set_hydrating(false);
+      return mount(component, options2);
+    }
+    throw error;
+  } finally {
+    set_hydrating(was_hydrating);
+    set_hydrate_node(previous_hydrate_node);
+  }
+}
+const document_listeners = /* @__PURE__ */ new Map();
+function _mount(Component, { target, anchor, props = {}, events, context, intro = true }) {
+  init_operations();
+  var registered_events = /* @__PURE__ */ new Set();
+  var event_handle = (events2) => {
+    for (var i = 0; i < events2.length; i++) {
+      var event_name = events2[i];
+      if (registered_events.has(event_name)) continue;
+      registered_events.add(event_name);
+      var passive = is_passive_event(event_name);
+      target.addEventListener(event_name, handle_event_propagation, { passive });
+      var n = document_listeners.get(event_name);
+      if (n === void 0) {
+        document.addEventListener(event_name, handle_event_propagation, { passive });
+        document_listeners.set(event_name, 1);
+      } else {
+        document_listeners.set(event_name, n + 1);
+      }
+    }
+  };
+  event_handle(array_from(all_registered_events));
+  root_event_handles.add(event_handle);
+  var component = void 0;
+  var unmount2 = component_root(() => {
+    var anchor_node = anchor ?? target.appendChild(create_text());
+    branch(() => {
+      if (context) {
+        push({});
+        var ctx = (
+          /** @type {ComponentContext} */
+          component_context
+        );
+        ctx.c = context;
+      }
+      if (events) {
+        props.$$events = events;
+      }
+      if (hydrating) {
+        assign_nodes(
+          /** @type {TemplateNode} */
+          anchor_node,
+          null
+        );
+      }
+      component = Component(anchor_node, props) || {};
+      if (hydrating) {
+        active_effect.nodes_end = hydrate_node;
+      }
+      if (context) {
+        pop();
+      }
+    });
+    return () => {
+      for (var event_name of registered_events) {
+        target.removeEventListener(event_name, handle_event_propagation);
+        var n = (
+          /** @type {number} */
+          document_listeners.get(event_name)
+        );
+        if (--n === 0) {
+          document.removeEventListener(event_name, handle_event_propagation);
+          document_listeners.delete(event_name);
+        } else {
+          document_listeners.set(event_name, n);
+        }
+      }
+      root_event_handles.delete(event_handle);
+      if (anchor_node !== anchor) {
+        anchor_node.parentNode?.removeChild(anchor_node);
+      }
+    };
+  });
+  mounted_components.set(component, unmount2);
+  return component;
+}
+let mounted_components = /* @__PURE__ */ new WeakMap();
+function unmount(component, options2) {
+  const fn = mounted_components.get(component);
+  if (fn) {
+    mounted_components.delete(component);
+    return fn(options2);
+  }
+  return Promise.resolve();
+}
+function asClassComponent$1(component) {
+  return class extends Svelte4Component {
+    /** @param {any} options */
+    constructor(options2) {
+      super({
+        component,
+        ...options2
+      });
+    }
+  };
+}
+class Svelte4Component {
+  /** @type {any} */
+  #events;
+  /** @type {Record<string, any>} */
+  #instance;
+  /**
+   * @param {ComponentConstructorOptions & {
+   *  component: any;
+   * }} options
+   */
+  constructor(options2) {
+    var sources = /* @__PURE__ */ new Map();
+    var add_source = (key, value) => {
+      var s = /* @__PURE__ */ mutable_source(value);
+      sources.set(key, s);
+      return s;
+    };
+    const props = new Proxy(
+      { ...options2.props || {}, $$events: {} },
+      {
+        get(target, prop) {
+          return get(sources.get(prop) ?? add_source(prop, Reflect.get(target, prop)));
+        },
+        has(target, prop) {
+          if (prop === LEGACY_PROPS) return true;
+          get(sources.get(prop) ?? add_source(prop, Reflect.get(target, prop)));
+          return Reflect.has(target, prop);
+        },
+        set(target, prop, value) {
+          set(sources.get(prop) ?? add_source(prop, value), value);
+          return Reflect.set(target, prop, value);
+        }
+      }
+    );
+    this.#instance = (options2.hydrate ? hydrate : mount)(options2.component, {
+      target: options2.target,
+      anchor: options2.anchor,
+      props,
+      context: options2.context,
+      intro: options2.intro ?? false,
+      recover: options2.recover
+    });
+    if (!options2?.props?.$$host || options2.sync === false) {
+      flush_sync();
+    }
+    this.#events = props.$$events;
+    for (const key of Object.keys(this.#instance)) {
+      if (key === "$set" || key === "$destroy" || key === "$on") continue;
+      define_property(this, key, {
+        get() {
+          return this.#instance[key];
+        },
+        /** @param {any} value */
+        set(value) {
+          this.#instance[key] = value;
+        },
+        enumerable: true
+      });
+    }
+    this.#instance.$set = /** @param {Record<string, any>} next */
+    (next) => {
+      Object.assign(props, next);
+    };
+    this.#instance.$destroy = () => {
+      unmount(this.#instance);
+    };
+  }
+  /** @param {Record<string, any>} props */
+  $set(props) {
+    this.#instance.$set(props);
+  }
+  /**
+   * @param {string} event
+   * @param {(...args: any[]) => any} callback
+   * @returns {any}
+   */
+  $on(event, callback) {
+    this.#events[event] = this.#events[event] || [];
+    const cb = (...args) => callback.call(this, ...args);
+    this.#events[event].push(cb);
+    return () => {
+      this.#events[event] = this.#events[event].filter(
+        /** @param {any} fn */
+        (fn) => fn !== cb
+      );
+    };
+  }
+  $destroy() {
+    this.#instance.$destroy();
+  }
+}
+let read_implementation = null;
+function set_read_implementation(fn) {
+  read_implementation = fn;
+}
+function asClassComponent(component) {
+  const component_constructor = asClassComponent$1(component);
+  const _render = (props, { context } = {}) => {
+    const result = render(component, { props, context });
+    return {
+      css: { code: "", map: null },
+      head: result.head,
+      html: result.body
+    };
+  };
+  component_constructor.render = _render;
+  return component_constructor;
+}
+function Root($$payload, $$props) {
+  push$1();
+  let {
+    stores,
+    page,
+    constructors,
+    components = [],
+    form,
+    data_0 = null,
+    data_1 = null
+  } = $$props;
   {
     setContext("__svelte__", stores);
   }
-  afterUpdate(stores.page.notify);
-  if ($$props.stores === void 0 && $$bindings.stores && stores !== void 0)
-    $$bindings.stores(stores);
-  if ($$props.page === void 0 && $$bindings.page && page !== void 0)
-    $$bindings.page(page);
-  if ($$props.constructors === void 0 && $$bindings.constructors && constructors !== void 0)
-    $$bindings.constructors(constructors);
-  if ($$props.components === void 0 && $$bindings.components && components !== void 0)
-    $$bindings.components(components);
-  if ($$props.form === void 0 && $$bindings.form && form !== void 0)
-    $$bindings.form(form);
-  if ($$props.data_0 === void 0 && $$bindings.data_0 && data_0 !== void 0)
-    $$bindings.data_0(data_0);
-  if ($$props.data_1 === void 0 && $$bindings.data_1 && data_1 !== void 0)
-    $$bindings.data_1(data_1);
-  let $$settled;
-  let $$rendered;
-  let previous_head = $$result.head;
-  do {
-    $$settled = true;
-    $$result.head = previous_head;
-    {
-      stores.page.set(page);
-    }
-    $$rendered = `  ${constructors[1] ? `${validate_component(constructors[0] || missing_component, "svelte:component").$$render(
-      $$result,
-      { data: data_0, this: components[0] },
-      {
-        this: ($$value) => {
-          components[0] = $$value;
-          $$settled = false;
-        }
+  {
+    stores.page.set(page);
+  }
+  const Pyramid_1 = constructors[1];
+  if (constructors[1]) {
+    $$payload.out += "<!--[-->";
+    const Pyramid_0 = constructors[0];
+    $$payload.out += `<!---->`;
+    Pyramid_0($$payload, {
+      data: data_0,
+      form,
+      children: ($$payload2) => {
+        $$payload2.out += `<!---->`;
+        Pyramid_1($$payload2, { data: data_1, form });
+        $$payload2.out += `<!---->`;
       },
-      {
-        default: () => {
-          return `${validate_component(constructors[1] || missing_component, "svelte:component").$$render(
-            $$result,
-            { data: data_1, form, this: components[1] },
-            {
-              this: ($$value) => {
-                components[1] = $$value;
-                $$settled = false;
-              }
-            },
-            {}
-          )}`;
-        }
-      }
-    )}` : `${validate_component(constructors[0] || missing_component, "svelte:component").$$render(
-      $$result,
-      { data: data_0, form, this: components[0] },
-      {
-        this: ($$value) => {
-          components[0] = $$value;
-          $$settled = false;
-        }
-      },
-      {}
-    )}`} ${``}`;
-  } while (!$$settled);
-  return $$rendered;
-});
+      $$slots: { default: true }
+    });
+    $$payload.out += `<!---->`;
+  } else {
+    $$payload.out += "<!--[!-->";
+    const Pyramid_0 = constructors[0];
+    $$payload.out += `<!---->`;
+    Pyramid_0($$payload, { data: data_0, form });
+    $$payload.out += `<!---->`;
+  }
+  $$payload.out += `<!--]--> `;
+  {
+    $$payload.out += "<!--[!-->";
+  }
+  $$payload.out += `<!--]-->`;
+  pop$1();
+}
+const root = asClassComponent(Root);
 const options = {
   app_dir: "_app",
   app_template_contains_nonce: false,
   csp: { "mode": "auto", "directives": { "upgrade-insecure-requests": false, "block-all-mixed-content": false }, "reportOnly": { "upgrade-insecure-requests": false, "block-all-mixed-content": false } },
-  csrf_check_origin: true,
+  csrf_check_origin: false,
   embedded: false,
   env_public_prefix: "PUBLIC_",
   env_private_prefix: "",
+  hash_routing: false,
   hooks: null,
   // added lazily, via `get_hooks`
   preload_strategy: "modulepreload",
-  root: Root,
+  root,
   service_worker: false,
   templates: {
-    app: ({ head, body, assets: assets2, nonce, env }) => '<!doctype html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<link rel="icon" href="' + assets2 + '/favicon.ico" />\n		<meta name="viewport" content="width=device-width, initial-scale=1" />\n		<title>[LuanDNH] - My Resume</title>\n\n		<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet" />\n\n		<!-- Vendor CSS Files -->\n		<link href="/vendor/aos/aos.css" rel="stylesheet" />\n		<link href="/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />\n		<link href="/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />\n		<link href="/vendor/boxicons/css/boxicons.min.css" rel="stylesheet" />\n		<link href="/vendor/glightbox/css/glightbox.min.css" rel="stylesheet" />\n		<link href="/vendor/swiper/swiper-bundle.min.css" rel="stylesheet" />\n\n		<!-- Template Main CSS File -->\n		<link href="/css/style.css" rel="stylesheet" />\n		' + head + '\n	</head>\n	<body data-sveltekit-preload-data="hover">\n		<div style="display: contents">' + body + '</div>\n\n		<!-- Vendor JS Files -->\n		<script src="/vendor/purecounter/purecounter_vanilla.js"><\/script>\n		<script src="/vendor/aos/aos.js"><\/script>\n		<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"><\/script>\n		<script src="/vendor/glightbox/js/glightbox.min.js"><\/script>\n		<script src="/vendor/isotope-layout/isotope.pkgd.min.js"><\/script>\n		<script src="/vendor/swiper/swiper-bundle.min.js"><\/script>\n		<script src="/vendor/waypoints/noframework.waypoints.js"><\/script>\n		<!-- Template Main JS File -->\n		<script src="/js/main.js"><\/script>\n	</body>\n</html>\n',
+    app: ({ head, body, assets: assets2, nonce, env }) => '<!doctype html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<meta name="viewport" content="width=device-width, initial-scale=1" />\n		<title>[LuanDNH] - My Resume</title>\n		<!-- Favicons -->\n		<link rel="apple-touch-icon" href="' + assets2 + '/images/apple-touch-icon.png" />\n\n		<link rel="shortcut icon" href="' + assets2 + '/images/favicon.ico" type="image/x-icon" />\n\n		<!-- Styles -->\n		<link rel="stylesheet" type="text/css" href="' + assets2 + '/css/bootstrap.min.css" />\n		<link rel="stylesheet" type="text/css" href="' + assets2 + '/css/style.css" />\n\n		<style type="text/css">\n			.medium-zoom-overlay {\n				position: fixed;\n				top: 0;\n				right: 0;\n				bottom: 0;\n				left: 0;\n				opacity: 0;\n				transition: opacity 0.3s;\n				will-change: opacity;\n			}\n			.medium-zoom--opened .medium-zoom-overlay {\n				cursor: pointer;\n				cursor: zoom-out;\n				opacity: 1;\n			}\n			.medium-zoom-image {\n				cursor: pointer;\n				cursor: zoom-in;\n				transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1) !important;\n			}\n			.medium-zoom-image--hidden {\n				visibility: hidden;\n			}\n			.medium-zoom-image--opened {\n				position: relative;\n				cursor: pointer;\n				cursor: zoom-out;\n				will-change: transform;\n			}\n		</style>\n\n		' + head + '\n	</head>\n	<body data-sveltekit-preload-data="hover"  class="bg-triangles">\n		<div style="display: contents">' + body + '</div>\n\n		<!-- JavaScripts -->\n		<script src="' + assets2 + '/js/jquery-3.4.1.min.js"><\/script>\n		<script src="' + assets2 + '/js/plugins.min.js"><\/script>\n		<script src="' + assets2 + '/js/common.js"><\/script>\n	</body>\n</html>\n',
     error: ({ status, message }) => '<!doctype html>\n<html lang="en">\n	<head>\n		<meta charset="utf-8" />\n		<title>' + message + `</title>
 
 		<style>
@@ -181,10 +1461,23 @@ const options = {
 		<div class="error">
 			<span class="status">` + status + '</span>\n			<div class="message">\n				<h1>' + message + "</h1>\n			</div>\n		</div>\n	</body>\n</html>\n"
   },
-  version_hash: "1mct2vx"
+  version_hash: "13v9c5b"
 };
 async function get_hooks() {
-  return {};
+  let handle;
+  let handleFetch;
+  let handleError;
+  let init;
+  let reroute;
+  let transport;
+  return {
+    handle,
+    handleFetch,
+    handleError,
+    init,
+    reroute,
+    transport
+  };
 }
 
 /** @type {Record<string, string>} */
@@ -287,6 +1580,20 @@ function stringify_string(str) {
 	return `"${last_pos === 0 ? str : result + str.slice(last_pos)}"`;
 }
 
+/** @param {Record<string | symbol, any>} object */
+function enumerable_symbols(object) {
+	return Object.getOwnPropertySymbols(object).filter(
+		(symbol) => Object.getOwnPropertyDescriptor(object, symbol).enumerable
+	);
+}
+
+const is_identifier = /^[a-zA-Z_$][a-zA-Z_$0-9]*$/;
+
+/** @param {string} key */
+function stringify_key(key) {
+	return is_identifier.test(key) ? '.' + key : '[' + JSON.stringify(key) + ']';
+}
+
 const chars$1 = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_$';
 const unsafe_chars = /[<\b\f\n\r\t\0\u2028\u2029]/g;
 const reserved =
@@ -360,6 +1667,22 @@ function uneval(value, replacer) {
 						keys.pop();
 					}
 					break;
+				
+				case "Int8Array":
+				case "Uint8Array":
+				case "Uint8ClampedArray":
+				case "Int16Array":
+				case "Uint16Array":
+				case "Int32Array":
+				case "Uint32Array":
+				case "Float32Array":
+				case "Float64Array":
+				case "BigInt64Array":
+				case "BigUint64Array":
+					return;
+				
+				case "ArrayBuffer":
+					return;
 
 				default:
 					if (!is_plain_object(thing)) {
@@ -369,7 +1692,7 @@ function uneval(value, replacer) {
 						);
 					}
 
-					if (Object.getOwnPropertySymbols(thing).length > 0) {
+					if (enumerable_symbols(thing).length > 0) {
 						throw new DevalueError(
 							`Cannot stringify POJOs with symbolic keys`,
 							keys
@@ -377,7 +1700,7 @@ function uneval(value, replacer) {
 					}
 
 					for (const key in thing) {
-						keys.push(`.${key}`);
+						keys.push(stringify_key(key));
 						walk(thing[key]);
 						keys.pop();
 					}
@@ -439,6 +1762,27 @@ function uneval(value, replacer) {
 			case 'Set':
 			case 'Map':
 				return `new ${type}([${Array.from(thing).map(stringify).join(',')}])`;
+			
+			case "Int8Array":
+			case "Uint8Array":
+			case "Uint8ClampedArray":
+			case "Int16Array":
+			case "Uint16Array":
+			case "Int32Array":
+			case "Uint32Array":
+			case "Float32Array":
+			case "Float64Array":
+			case "BigInt64Array":
+			case "BigUint64Array": {
+				/** @type {import("./types.js").TypedArray} */
+				const typedArray = thing;
+				return `new ${type}([${typedArray.toString()}])`;
+			}
+				
+			case "ArrayBuffer": {
+				const ui8 = new Uint8Array(thing);
+				return `new Uint8Array([${ui8.toString()}]).buffer`;
+			}
 
 			default:
 				const obj = `{${Object.keys(thing)
@@ -591,6 +1935,60 @@ function stringify_primitive$1(thing) {
 	return str;
 }
 
+/**
+ * Base64 Encodes an arraybuffer
+ * @param {ArrayBuffer} arraybuffer
+ * @returns {string}
+ */
+function encode64(arraybuffer) {
+  const dv = new DataView(arraybuffer);
+  let binaryString = "";
+
+  for (let i = 0; i < arraybuffer.byteLength; i++) {
+    binaryString += String.fromCharCode(dv.getUint8(i));
+  }
+
+  return binaryToAscii(binaryString);
+}
+
+const KEY_STRING =
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+/**
+ * Substitute for btoa since it's deprecated in node.
+ * Does not do any input validation.
+ *
+ * @see https://github.com/jsdom/abab/blob/master/lib/btoa.js
+ *
+ * @param {string} str
+ * @returns {string}
+ */
+function binaryToAscii(str) {
+  let out = "";
+  for (let i = 0; i < str.length; i += 3) {
+    /** @type {[number, number, number, number]} */
+    const groupsOfSix = [undefined, undefined, undefined, undefined];
+    groupsOfSix[0] = str.charCodeAt(i) >> 2;
+    groupsOfSix[1] = (str.charCodeAt(i) & 0x03) << 4;
+    if (str.length > i + 1) {
+      groupsOfSix[1] |= str.charCodeAt(i + 1) >> 4;
+      groupsOfSix[2] = (str.charCodeAt(i + 1) & 0x0f) << 2;
+    }
+    if (str.length > i + 2) {
+      groupsOfSix[2] |= str.charCodeAt(i + 2) >> 6;
+      groupsOfSix[3] = str.charCodeAt(i + 2) & 0x3f;
+    }
+    for (let j = 0; j < groupsOfSix.length; j++) {
+      if (typeof groupsOfSix[j] === "undefined") {
+        out += "=";
+      } else {
+        out += KEY_STRING[groupsOfSix[j]];
+      }
+    }
+  }
+  return out;
+}
+
 const UNDEFINED = -1;
 const HOLE = -2;
 const NAN = -3;
@@ -612,8 +2010,10 @@ function stringify(value, reducers) {
 
 	/** @type {Array<{ key: string, fn: (value: any) => any }>} */
 	const custom = [];
-	for (const key in reducers) {
-		custom.push({ key, fn: reducers[key] });
+	if (reducers) {
+		for (const key of Object.getOwnPropertyNames(reducers)) {
+			custom.push({ key, fn: reducers[key] });
+		}
 	}
 
 	/** @type {string[]} */
@@ -665,7 +2065,8 @@ function stringify(value, reducers) {
 					break;
 
 				case 'Date':
-					str = `["Date","${thing.toISOString()}"]`;
+					const valid = !isNaN(thing.getDate());
+					str = `["Date","${valid ? thing.toISOString() : ''}"]`;
 					break;
 
 				case 'RegExp':
@@ -712,11 +2113,39 @@ function stringify(value, reducers) {
 							`.get(${is_primitive(key) ? stringify_primitive(key) : '...'})`
 						);
 						str += `,${flatten(key)},${flatten(value)}`;
+						keys.pop();
 					}
 
 					str += ']';
 					break;
 
+				case "Int8Array":
+				case "Uint8Array":
+				case "Uint8ClampedArray":
+				case "Int16Array":
+				case "Uint16Array":
+				case "Int32Array":
+				case "Uint32Array":
+				case "Float32Array":
+				case "Float64Array":
+				case "BigInt64Array":
+				case "BigUint64Array": {
+					/** @type {import("./types.js").TypedArray} */
+					const typedArray = thing;
+					const base64 = encode64(typedArray.buffer);
+					str = '["' + type + '","' + base64 + '"]';
+					break;
+				}
+					
+				case "ArrayBuffer": {
+					/** @type {ArrayBuffer} */
+					const arraybuffer = thing;
+					const base64 = encode64(arraybuffer);
+					
+					str = `["ArrayBuffer","${base64}"]`;
+					break;
+				}
+				
 				default:
 					if (!is_plain_object(thing)) {
 						throw new DevalueError(
@@ -725,7 +2154,7 @@ function stringify(value, reducers) {
 						);
 					}
 
-					if (Object.getOwnPropertySymbols(thing).length > 0) {
+					if (enumerable_symbols(thing).length > 0) {
 						throw new DevalueError(
 							`Cannot stringify POJOs with symbolic keys`,
 							keys
@@ -735,7 +2164,7 @@ function stringify(value, reducers) {
 					if (Object.getPrototypeOf(thing) === null) {
 						str = '["null"';
 						for (const key in thing) {
-							keys.push(`.${key}`);
+							keys.push(stringify_key(key));
 							str += `,${stringify_string(key)},${flatten(thing[key])}`;
 							keys.pop();
 						}
@@ -746,7 +2175,7 @@ function stringify(value, reducers) {
 						for (const key in thing) {
 							if (started) str += ',';
 							started = true;
-							keys.push(`.${key}`);
+							keys.push(stringify_key(key));
 							str += `${stringify_string(key)}:${flatten(thing[key])}`;
 							keys.pop();
 						}
@@ -1126,6 +2555,8 @@ function requireSetCookie () {
 	      cookie.httpOnly = true;
 	    } else if (key === "samesite") {
 	      cookie.sameSite = value;
+	    } else if (key === "partitioned") {
+	      cookie.partitioned = true;
 	    } else {
 	      cookie[key] = value;
 	    }
@@ -1191,10 +2622,6 @@ function requireSetCookie () {
 	  if (!Array.isArray(input)) {
 	    input = [input];
 	  }
-
-	  options = options
-	    ? Object.assign({}, defaultParseOptions, options)
-	    : defaultParseOptions;
 
 	  if (!options.map) {
 	    return input.filter(isNonEmptyString).map(function (str) {
@@ -1301,16 +2728,15 @@ function requireSetCookie () {
 	return setCookie.exports;
 }
 
-var setCookieExports = requireSetCookie();
+var setCookieExports = /*@__PURE__*/ requireSetCookie();
 
-const DEV = false;
 const SVELTE_KIT_ASSETS = "/_svelte_kit_assets";
 const ENDPOINT_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"];
 const PAGE_METHODS = ["GET", "POST", "HEAD"];
 function negotiate(accept, types) {
   const parts = [];
   accept.split(",").forEach((str, i) => {
-    const match = /([^/]+)\/([^;]+)(?:;q=([0-9.]+))?/.exec(str);
+    const match = /([^/ \t]+)\/([^; \t]+)[ \t]*(?:;[ \t]*q=([0-9.]+))?/.exec(str);
     if (match) {
       const [, type, subtype, q = "1"] = match;
       parts.push({ type, subtype, q: +q, i });
@@ -1455,6 +2881,39 @@ function get_status(error) {
 function get_message(error) {
   return error instanceof SvelteKitError ? error.text : "Internal Error";
 }
+const escape_html_attr_dict = {
+  "&": "&amp;",
+  '"': "&quot;"
+  // Svelte also escapes < because the escape function could be called inside a `noscript` there
+  // https://github.com/sveltejs/svelte/security/advisories/GHSA-8266-84wp-wv5c
+  // However, that doesn't apply in SvelteKit
+};
+const escape_html_dict = {
+  "&": "&amp;",
+  "<": "&lt;"
+};
+const surrogates = (
+  // high surrogate without paired low surrogate
+  "[\\ud800-\\udbff](?![\\udc00-\\udfff])|[\\ud800-\\udbff][\\udc00-\\udfff]|[\\udc00-\\udfff]"
+);
+const escape_html_attr_regex = new RegExp(
+  `[${Object.keys(escape_html_attr_dict).join("")}]|` + surrogates,
+  "g"
+);
+const escape_html_regex = new RegExp(
+  `[${Object.keys(escape_html_dict).join("")}]|` + surrogates,
+  "g"
+);
+function escape_html(str, is_attr) {
+  const dict = is_attr ? escape_html_attr_dict : escape_html_dict;
+  const escaped_str = str.replace(is_attr ? escape_html_attr_regex : escape_html_regex, (match) => {
+    if (match.length === 2) {
+      return match;
+    }
+    return dict[match] ?? `&#${match.charCodeAt(0)};`;
+  });
+  return escaped_str;
+}
 function method_not_allowed(mod, method) {
   return text(`${method} method not allowed`, {
     status: 405,
@@ -1467,12 +2926,11 @@ function method_not_allowed(mod, method) {
 }
 function allowed_methods(mod) {
   const allowed = ENDPOINT_METHODS.filter((method) => method in mod);
-  if ("GET" in mod || "HEAD" in mod)
-    allowed.push("HEAD");
+  if ("GET" in mod || "HEAD" in mod) allowed.push("HEAD");
   return allowed;
 }
 function static_error_page(options2, status, message) {
-  let page = options2.templates.error({ status, message });
+  let page = options2.templates.error({ status, message: escape_html(message) });
   return text(page, {
     headers: { "content-type": "text/html; charset=utf-8" },
     status
@@ -1528,12 +2986,9 @@ function stringify_uses(node) {
   if (node.uses && node.uses.params.size > 0) {
     uses.push(`"params":${JSON.stringify(Array.from(node.uses.params))}`);
   }
-  if (node.uses?.parent)
-    uses.push('"parent":1');
-  if (node.uses?.route)
-    uses.push('"route":1');
-  if (node.uses?.url)
-    uses.push('"url":1');
+  if (node.uses?.parent) uses.push('"parent":1');
+  if (node.uses?.route) uses.push('"route":1');
+  if (node.uses?.url) uses.push('"url":1');
   return `"uses":{${uses.join(",")}}`;
 }
 async function render_endpoint(event, mod, state) {
@@ -1593,8 +3048,7 @@ function is_endpoint_request(event) {
   if (ENDPOINT_METHODS.includes(method) && !PAGE_METHODS.includes(method)) {
     return true;
   }
-  if (method === "POST" && headers2.get("x-sveltekit-action") === "true")
-    return false;
+  if (method === "POST" && headers2.get("x-sveltekit-action") === "true") return false;
   const accept = event.request.headers.get("accept") ?? "*/*";
   return negotiate(accept, ["*", "text/html"]) !== "text/html";
 }
@@ -1617,7 +3071,7 @@ async function handle_action_json_request(event, options2, server) {
     const no_actions_error = new SvelteKitError(
       405,
       "Method Not Allowed",
-      "POST method not allowed. No actions exist for this page"
+      `POST method not allowed. No form actions exist for ${"this page"}`
     );
     return action_json(
       {
@@ -1637,8 +3091,7 @@ async function handle_action_json_request(event, options2, server) {
   check_named_default_separate(actions);
   try {
     const data = await call_action(event, actions);
-    if (false)
-      ;
+    if (false) ;
     if (data instanceof ActionFailure) {
       return action_json({
         type: "failure",
@@ -1649,7 +3102,8 @@ async function handle_action_json_request(event, options2, server) {
         data: stringify_action_response(
           data.data,
           /** @type {string} */
-          event.route.id
+          event.route.id,
+          options2.hooks.transport
         )
       });
     } else {
@@ -1660,7 +3114,8 @@ async function handle_action_json_request(event, options2, server) {
         data: stringify_action_response(
           data,
           /** @type {string} */
-          event.route.id
+          event.route.id,
+          options2.hooks.transport
         )
       });
     }
@@ -1709,15 +3164,14 @@ async function handle_action_request(event, server) {
       error: new SvelteKitError(
         405,
         "Method Not Allowed",
-        "POST method not allowed. No actions exist for this page"
+        `POST method not allowed. No form actions exist for ${"this page"}`
       )
     };
   }
   check_named_default_separate(actions);
   try {
     const data = await call_action(event, actions);
-    if (false)
-      ;
+    if (false) ;
     if (data instanceof ActionFailure) {
       return {
         type: "failure",
@@ -1750,7 +3204,7 @@ async function handle_action_request(event, server) {
 function check_named_default_separate(actions) {
   if (actions.default && Object.keys(actions).length > 1) {
     throw new Error(
-      "When using named actions, the default action cannot be used. See the docs for more info: https://kit.svelte.dev/docs/form-actions#named-actions"
+      "When using named actions, the default action cannot be used. See the docs for more info: https://svelte.dev/docs/kit/form-actions#named-actions"
     );
   }
 }
@@ -1781,13 +3235,24 @@ async function call_action(event, actions) {
   }
   return action(event);
 }
-function uneval_action_response(data, route_id) {
-  return try_deserialize(data, uneval, route_id);
+function uneval_action_response(data, route_id, transport) {
+  const replacer = (thing) => {
+    for (const key2 in transport) {
+      const encoded = transport[key2].encode(thing);
+      if (encoded) {
+        return `app.decode('${key2}', ${uneval(encoded, replacer)})`;
+      }
+    }
+  };
+  return try_serialize(data, (value) => uneval(value, replacer), route_id);
 }
-function stringify_action_response(data, route_id) {
-  return try_deserialize(data, stringify, route_id);
+function stringify_action_response(data, route_id, transport) {
+  const encoders = Object.fromEntries(
+    Object.entries(transport).map(([key2, value]) => [key2, value.encode])
+  );
+  return try_serialize(data, (value) => stringify(value, encoders), route_id);
 }
-function try_deserialize(data, fn, route_id) {
+function try_serialize(data, fn, route_id) {
   try {
     return fn(data);
   } catch (e) {
@@ -1795,10 +3260,14 @@ function try_deserialize(data, fn, route_id) {
       /** @type {any} */
       e
     );
+    if (data instanceof Response) {
+      throw new Error(
+        `Data returned from action inside ${route_id} is not serializable. Form actions need to return plain objects or fail(). E.g. return { success: true } or return fail(400, { message: "invalid" });`
+      );
+    }
     if ("path" in error) {
       let message = `Data returned from action inside ${route_id} is not serializable: ${error.message}`;
-      if (error.path !== "")
-        message += ` (data.${error.path})`;
+      if (error.path !== "") message += ` (data.${error.path})`;
       throw new Error(message);
     }
     throw error;
@@ -1818,8 +3287,7 @@ function b64_encode(buffer) {
   );
 }
 async function load_server_data({ event, state, node, parent }) {
-  if (!node?.server)
-    return null;
+  if (!node?.server) return null;
   let is_tracking = true;
   const uses = {
     dependencies: /* @__PURE__ */ new Set(),
@@ -2025,7 +3493,7 @@ function create_universal_fetch(event, state, fetched, csr, resolve_opts) {
           const included = resolve_opts.filterSerializedResponseHeaders(lower, value);
           if (!included) {
             throw new Error(
-              `Failed to get response header "${lower}" — it must be included by the \`filterSerializedResponseHeaders\` option: https://kit.svelte.dev/docs/hooks#server-hooks-handle (at ${event.route.id})`
+              `Failed to get response header "${lower}" — it must be included by the \`filterSerializedResponseHeaders\` option: https://svelte.dev/docs/kit/hooks#Server-hooks-handle (at ${event.route.id})`
             );
           }
         }
@@ -2054,88 +3522,21 @@ async function stream_to_string(stream) {
   }
   return result;
 }
-const subscriber_queue = [];
-function readable(value, start) {
-  return {
-    subscribe: writable(value, start).subscribe
-  };
-}
-function writable(value, start = noop) {
-  let stop;
-  const subscribers = /* @__PURE__ */ new Set();
-  function set(new_value) {
-    if (safe_not_equal(value, new_value)) {
-      value = new_value;
-      if (stop) {
-        const run_queue = !subscriber_queue.length;
-        for (const subscriber of subscribers) {
-          subscriber[1]();
-          subscriber_queue.push(subscriber, value);
-        }
-        if (run_queue) {
-          for (let i = 0; i < subscriber_queue.length; i += 2) {
-            subscriber_queue[i][0](subscriber_queue[i + 1]);
-          }
-          subscriber_queue.length = 0;
-        }
-      }
-    }
-  }
-  function update(fn) {
-    set(fn(value));
-  }
-  function subscribe(run, invalidate = noop) {
-    const subscriber = [run, invalidate];
-    subscribers.add(subscriber);
-    if (subscribers.size === 1) {
-      stop = start(set, update) || noop;
-    }
-    run(value);
-    return () => {
-      subscribers.delete(subscriber);
-      if (subscribers.size === 0 && stop) {
-        stop();
-        stop = null;
-      }
-    };
-  }
-  return { set, update, subscribe };
-}
 function hash(...values) {
   let hash2 = 5381;
   for (const value of values) {
     if (typeof value === "string") {
       let i = value.length;
-      while (i)
-        hash2 = hash2 * 33 ^ value.charCodeAt(--i);
+      while (i) hash2 = hash2 * 33 ^ value.charCodeAt(--i);
     } else if (ArrayBuffer.isView(value)) {
       const buffer = new Uint8Array(value.buffer, value.byteOffset, value.byteLength);
       let i = buffer.length;
-      while (i)
-        hash2 = hash2 * 33 ^ buffer[--i];
+      while (i) hash2 = hash2 * 33 ^ buffer[--i];
     } else {
       throw new TypeError("value must be a string or TypedArray");
     }
   }
   return (hash2 >>> 0).toString(36);
-}
-const escape_html_attr_dict = {
-  "&": "&amp;",
-  '"': "&quot;"
-};
-const escape_html_attr_regex = new RegExp(
-  // special characters
-  `[${Object.keys(escape_html_attr_dict).join("")}]|[\\ud800-\\udbff](?![\\udc00-\\udfff])|[\\ud800-\\udbff][\\udc00-\\udfff]|[\\udc00-\\udfff]`,
-  "g"
-);
-function escape_html_attr(str) {
-  const escaped_str = str.replace(escape_html_attr_regex, (match) => {
-    if (match.length === 2) {
-      return match;
-    }
-    return escape_html_attr_dict[match] ?? `&#${match.charCodeAt(0)};`;
-  });
-  return `"${escaped_str}"`;
 }
 const replacements = {
   "<": "\\u003C",
@@ -2152,12 +3553,9 @@ function serialize_data(fetched, filter, prerendering2 = false) {
     if (filter(key2, value)) {
       headers2[key2] = value;
     }
-    if (key2 === "cache-control")
-      cache_control = value;
-    else if (key2 === "age")
-      age = value;
-    else if (key2 === "vary" && value.trim() === "*")
-      varyAny = true;
+    if (key2 === "cache-control") cache_control = value;
+    else if (key2 === "age") age = value;
+    else if (key2 === "vary" && value.trim() === "*") varyAny = true;
   }
   const payload = {
     status: fetched.response.status,
@@ -2169,7 +3567,7 @@ function serialize_data(fetched, filter, prerendering2 = false) {
   const attrs = [
     'type="application/json"',
     "data-sveltekit-fetched",
-    `data-url=${escape_html_attr(fetched.url)}`
+    `data-url="${escape_html(fetched.url, true)}"`
   ];
   if (fetched.is_b64) {
     attrs.push("data-b64");
@@ -2196,8 +3594,7 @@ function serialize_data(fetched, filter, prerendering2 = false) {
 const s = JSON.stringify;
 const encoder$2 = new TextEncoder();
 function sha256(data) {
-  if (!key[0])
-    precompute();
+  if (!key[0]) precompute();
   const out = init.slice(0);
   const array2 = encode(data);
   for (let i = 0; i < array2.length; i += 16) {
@@ -2340,7 +3737,17 @@ class BaseProvider {
   /** @type {boolean} */
   #script_needs_csp;
   /** @type {boolean} */
+  #script_src_needs_csp;
+  /** @type {boolean} */
+  #script_src_elem_needs_csp;
+  /** @type {boolean} */
   #style_needs_csp;
+  /** @type {boolean} */
+  #style_src_needs_csp;
+  /** @type {boolean} */
+  #style_src_attr_needs_csp;
+  /** @type {boolean} */
+  #style_src_elem_needs_csp;
   /** @type {import('types').CspDirectives} */
   #directives;
   /** @type {import('types').Csp.Source[]} */
@@ -2374,62 +3781,50 @@ class BaseProvider {
     const effective_style_src = d["style-src"] || d["default-src"];
     const style_src_attr = d["style-src-attr"];
     const style_src_elem = d["style-src-elem"];
-    this.#script_needs_csp = !!effective_script_src && effective_script_src.filter((value) => value !== "unsafe-inline").length > 0 || !!script_src_elem && script_src_elem.filter((value) => value !== "unsafe-inline").length > 0;
-    this.#style_needs_csp = !!effective_style_src && effective_style_src.filter((value) => value !== "unsafe-inline").length > 0 || !!style_src_attr && style_src_attr.filter((value) => value !== "unsafe-inline").length > 0 || !!style_src_elem && style_src_elem.filter((value) => value !== "unsafe-inline").length > 0;
+    const needs_csp = (directive) => !!directive && !directive.some((value) => value === "unsafe-inline");
+    this.#script_src_needs_csp = needs_csp(effective_script_src);
+    this.#script_src_elem_needs_csp = needs_csp(script_src_elem);
+    this.#style_src_needs_csp = needs_csp(effective_style_src);
+    this.#style_src_attr_needs_csp = needs_csp(style_src_attr);
+    this.#style_src_elem_needs_csp = needs_csp(style_src_elem);
+    this.#script_needs_csp = this.#script_src_needs_csp || this.#script_src_elem_needs_csp;
+    this.#style_needs_csp = this.#style_src_needs_csp || this.#style_src_attr_needs_csp || this.#style_src_elem_needs_csp;
     this.script_needs_nonce = this.#script_needs_csp && !this.#use_hashes;
     this.style_needs_nonce = this.#style_needs_csp && !this.#use_hashes;
     this.#nonce = nonce;
   }
   /** @param {string} content */
   add_script(content) {
-    if (this.#script_needs_csp) {
-      const d = this.#directives;
-      if (this.#use_hashes) {
-        const hash2 = sha256(content);
-        this.#script_src.push(`sha256-${hash2}`);
-        if (d["script-src-elem"]?.length) {
-          this.#script_src_elem.push(`sha256-${hash2}`);
-        }
-      } else {
-        if (this.#script_src.length === 0) {
-          this.#script_src.push(`nonce-${this.#nonce}`);
-        }
-        if (d["script-src-elem"]?.length) {
-          this.#script_src_elem.push(`nonce-${this.#nonce}`);
-        }
-      }
+    if (!this.#script_needs_csp) return;
+    const source = this.#use_hashes ? `sha256-${sha256(content)}` : `nonce-${this.#nonce}`;
+    if (this.#script_src_needs_csp) {
+      this.#script_src.push(source);
+    }
+    if (this.#script_src_elem_needs_csp) {
+      this.#script_src_elem.push(source);
     }
   }
   /** @param {string} content */
   add_style(content) {
-    if (this.#style_needs_csp) {
-      const empty_comment_hash = "9OlNO0DNEeaVzHL4RZwCLsBHA8WBQ8toBp/4F5XV2nc=";
+    if (!this.#style_needs_csp) return;
+    const source = this.#use_hashes ? `sha256-${sha256(content)}` : `nonce-${this.#nonce}`;
+    if (this.#style_src_needs_csp) {
+      this.#style_src.push(source);
+    }
+    if (this.#style_src_needs_csp) {
+      this.#style_src.push(source);
+    }
+    if (this.#style_src_attr_needs_csp) {
+      this.#style_src_attr.push(source);
+    }
+    if (this.#style_src_elem_needs_csp) {
+      const sha256_empty_comment_hash = "sha256-9OlNO0DNEeaVzHL4RZwCLsBHA8WBQ8toBp/4F5XV2nc=";
       const d = this.#directives;
-      if (this.#use_hashes) {
-        const hash2 = sha256(content);
-        this.#style_src.push(`sha256-${hash2}`);
-        if (d["style-src-attr"]?.length) {
-          this.#style_src_attr.push(`sha256-${hash2}`);
-        }
-        if (d["style-src-elem"]?.length) {
-          if (hash2 !== empty_comment_hash && !d["style-src-elem"].includes(`sha256-${empty_comment_hash}`)) {
-            this.#style_src_elem.push(`sha256-${empty_comment_hash}`);
-          }
-          this.#style_src_elem.push(`sha256-${hash2}`);
-        }
-      } else {
-        if (this.#style_src.length === 0 && !d["style-src"]?.includes("unsafe-inline")) {
-          this.#style_src.push(`nonce-${this.#nonce}`);
-        }
-        if (d["style-src-attr"]?.length) {
-          this.#style_src_attr.push(`nonce-${this.#nonce}`);
-        }
-        if (d["style-src-elem"]?.length) {
-          if (!d["style-src-elem"].includes(`sha256-${empty_comment_hash}`)) {
-            this.#style_src_elem.push(`sha256-${empty_comment_hash}`);
-          }
-          this.#style_src_elem.push(`nonce-${this.#nonce}`);
-        }
+      if (d["style-src-elem"] && !d["style-src-elem"].includes(sha256_empty_comment_hash) && !this.#style_src_elem.includes(sha256_empty_comment_hash)) {
+        this.#style_src_elem.push(sha256_empty_comment_hash);
+      }
+      if (source !== sha256_empty_comment_hash) {
+        this.#style_src_elem.push(source);
       }
     }
   }
@@ -2477,8 +3872,7 @@ class BaseProvider {
         /** @type {string[] | true} */
         directives[key2]
       );
-      if (!value)
-        continue;
+      if (!value) continue;
       const directive = [key2];
       if (Array.isArray(value)) {
         value.forEach((value2) => {
@@ -2500,7 +3894,7 @@ class CspProvider extends BaseProvider {
     if (!content) {
       return;
     }
-    return `<meta http-equiv="content-security-policy" content=${escape_html_attr(content)}>`;
+    return `<meta http-equiv="content-security-policy" content="${escape_html(content, true)}">`;
   }
 }
 class CspReportOnlyProvider extends BaseProvider {
@@ -2572,8 +3966,7 @@ function create_async_iterator() {
         return {
           next: async () => {
             const next = await deferred[0].promise;
-            if (!next.done)
-              deferred.shift();
+            if (!next.done) deferred.shift();
             return next;
           }
         };
@@ -2628,12 +4021,16 @@ async function render_response({
   let base$1 = base;
   let assets$1 = assets;
   let base_expression = s(base);
-  if (!state.prerendering?.fallback) {
-    const segments = event.url.pathname.slice(base.length).split("/").slice(2);
-    base$1 = segments.map(() => "..").join("/") || ".";
-    base_expression = `new URL(${s(base$1)}, location).pathname.slice(0, -1)`;
-    if (!assets || assets[0] === "/" && assets !== SVELTE_KIT_ASSETS) {
-      assets$1 = base$1;
+  {
+    if (!state.prerendering?.fallback) {
+      const segments = event.url.pathname.slice(base.length).split("/").slice(2);
+      base$1 = segments.map(() => "..").join("/") || ".";
+      base_expression = `new URL(${s(base$1)}, location).pathname.slice(0, -1)`;
+      if (!assets || assets[0] === "/" && assets !== SVELTE_KIT_ASSETS) {
+        assets$1 = base$1;
+      }
+    } else if (options2.hash_routing) {
+      base_expression = "new URL('.', location).pathname.slice(0, -1)";
     }
   }
   if (page_config.ssr) {
@@ -2665,21 +4062,28 @@ async function render_response({
       state: {}
     };
     override({ base: base$1, assets: assets$1 });
+    const render_opts = {
+      context: /* @__PURE__ */ new Map([
+        [
+          "__request__",
+          {
+            page: props.page
+          }
+        ]
+      ])
+    };
     {
       try {
-        rendered = options2.root.render(props);
+        rendered = options2.root.render(props, render_opts);
       } finally {
         reset();
       }
     }
     for (const { node } of branch) {
-      for (const url of node.imports)
-        modulepreloads.add(url);
-      for (const url of node.stylesheets)
-        stylesheets.add(url);
-      for (const url of node.fonts)
-        fonts.add(url);
-      if (node.inline_styles) {
+      for (const url of node.imports) modulepreloads.add(url);
+      for (const url of node.stylesheets) stylesheets.add(url);
+      for (const url of node.fonts) fonts.add(url);
+      if (node.inline_styles && !client.inline) {
         Object.entries(await node.inline_styles()).forEach(([k, v]) => inline_styles.set(k, v));
       }
     }
@@ -2697,11 +4101,14 @@ async function render_response({
     }
     return `${assets$1}/${path}`;
   };
+  if (client.inline?.style) {
+    head += `
+	<style>${client.inline.style}</style>`;
+  }
   if (inline_styles.size > 0) {
     const content = Array.from(inline_styles.values()).join("\n");
     const attributes = [];
-    if (csp.style_needs_nonce)
-      attributes.push(` nonce="${csp.nonce}"`);
+    if (csp.style_needs_nonce) attributes.push(` nonce="${csp.nonce}"`);
     csp.add_style(content);
     head += `
 	<style${attributes.join("")}>${content}</style>`;
@@ -2740,6 +4147,7 @@ async function render_response({
     event,
     options2,
     branch.map((b) => b.server_data),
+    csp,
     global
   );
   if (page_config.ssr && page_config.csr) {
@@ -2752,17 +4160,19 @@ async function render_response({
     if (client.uses_env_dynamic_public && state.prerendering) {
       modulepreloads.add(`${options2.app_dir}/env.js`);
     }
-    const included_modulepreloads = Array.from(modulepreloads, (dep) => prefixed(dep)).filter(
-      (path) => resolve_opts.preload({ type: "js", path })
-    );
-    for (const path of included_modulepreloads) {
-      link_header_preloads.add(`<${encodeURI(path)}>; rel="modulepreload"; nopush`);
-      if (options2.preload_strategy !== "modulepreload") {
-        head += `
+    if (!client.inline) {
+      const included_modulepreloads = Array.from(modulepreloads, (dep) => prefixed(dep)).filter(
+        (path) => resolve_opts.preload({ type: "js", path })
+      );
+      for (const path of included_modulepreloads) {
+        link_header_preloads.add(`<${encodeURI(path)}>; rel="modulepreload"; nopush`);
+        if (options2.preload_strategy !== "modulepreload") {
+          head += `
 		<link rel="preload" as="script" crossorigin="anonymous" href="${path}">`;
-      } else if (state.prerendering) {
-        head += `
+        } else if (state.prerendering) {
+          head += `
 		<link rel="modulepreload" href="${path}">`;
+        }
       }
     }
     const blocks = [];
@@ -2780,26 +4190,32 @@ async function render_response({
 							deferred.set(id, { fulfil, reject });
 						})`);
       properties.push(`resolve: ({ id, data, error }) => {
-							const { fulfil, reject } = deferred.get(id);
-							deferred.delete(id);
-
-							if (error) reject(error);
-							else fulfil(data);
+							const try_to_resolve = () => {
+								if (!deferred.has(id)) {
+									setTimeout(try_to_resolve, 0);
+									return;
+								}
+								const { fulfil, reject } = deferred.get(id);
+								deferred.delete(id);
+								if (error) reject(error);
+								else fulfil(data);
+							}
+							try_to_resolve();
 						}`);
     }
     blocks.push(`${global} = {
 						${properties.join(",\n						")}
 					};`);
-    const args = ["app", "element"];
+    const args = ["element"];
     blocks.push("const element = document.currentScript.parentElement;");
     if (page_config.ssr) {
       const serialized = { form: "null", error: "null" };
-      blocks.push(`const data = ${data};`);
       if (form_value) {
         serialized.form = uneval_action_response(
           form_value,
           /** @type {string} */
-          event.route.id
+          event.route.id,
+          options2.hooks.transport
         );
       }
       if (error) {
@@ -2807,7 +4223,7 @@ async function render_response({
       }
       const hydrate = [
         `node_ids: [${branch.map(({ node }) => node.index).join(", ")}]`,
-        "data",
+        `data: ${data}`,
         `form: ${serialized.form}`,
         `error: ${serialized.error}`
       ];
@@ -2823,24 +4239,24 @@ ${indent}	${hydrate.join(`,
 ${indent}	`)}
 ${indent}}`);
     }
+    const boot = client.inline ? `${client.inline.script}
+
+					__sveltekit_${options2.version_hash}.app.start(${args.join(", ")});` : client.app ? `Promise.all([
+						import(${s(prefixed(client.start))}),
+						import(${s(prefixed(client.app))})
+					]).then(([kit, app]) => {
+						kit.start(app, ${args.join(", ")});
+					});` : `import(${s(prefixed(client.start))}).then((app) => {
+						app.start(${args.join(", ")})
+					});`;
     if (load_env_eagerly) {
       blocks.push(`import(${s(`${base$1}/${options2.app_dir}/env.js`)}).then(({ env }) => {
 						${global}.env = env;
 
-						Promise.all([
-							import(${s(prefixed(client.start))}),
-							import(${s(prefixed(client.app))})
-						]).then(([kit, app]) => {
-							kit.start(${args.join(", ")});
-						});
+						${boot.replace(/\n/g, "\n	")}
 					});`);
     } else {
-      blocks.push(`Promise.all([
-						import(${s(prefixed(client.start))}),
-						import(${s(prefixed(client.app))})
-					]).then(([kit, app]) => {
-						kit.start(${args.join(", ")});
-					});`);
+      blocks.push(boot);
     }
     if (options2.service_worker) {
       const opts = "";
@@ -2922,13 +4338,11 @@ ${indent}}`);
       type: "bytes"
     }),
     {
-      headers: {
-        "content-type": "text/html"
-      }
+      headers: headers2
     }
   );
 }
-function get_data(event, options2, nodes, global) {
+function get_data(event, options2, nodes, csp, global) {
   let promise_id = 1;
   let count = 0;
   const { iterator, push, done } = create_async_iterator();
@@ -2953,7 +4367,7 @@ function get_data(event, options2, nodes, global) {
           let str;
           try {
             str = uneval({ id, data, error }, replacer);
-          } catch (e) {
+          } catch {
             error = await handle_error_and_jsonify(
               event,
               options2,
@@ -2962,19 +4376,25 @@ function get_data(event, options2, nodes, global) {
             data = void 0;
             str = uneval({ id, data, error }, replacer);
           }
-          push(`<script>${global}.resolve(${str})<\/script>
+          const nonce = csp.script_needs_nonce ? ` nonce="${csp.nonce}"` : "";
+          push(`<script${nonce}>${global}.resolve(${str})<\/script>
 `);
-          if (count === 0)
-            done();
+          if (count === 0) done();
         }
       );
       return `${global}.defer(${id})`;
+    } else {
+      for (const key2 in options2.hooks.transport) {
+        const encoded = options2.hooks.transport[key2].encode(thing);
+        if (encoded) {
+          return `app.decode('${key2}', ${uneval(encoded, replacer)})`;
+        }
+      }
     }
   }
   try {
     const strings = nodes.map((node) => {
-      if (!node)
-        return "null";
+      if (!node) return "null";
       return `{"type":"data","data":${uneval(node.data, replacer)},${stringify_uses(node)}${node.slash ? `,"slash":${JSON.stringify(node.slash)}` : ""}}`;
     });
     return {
@@ -3030,6 +4450,7 @@ async function respond_with_error({
         event,
         state,
         node: default_layout,
+        // eslint-disable-next-line @typescript-eslint/require-await
         parent: async () => ({})
       });
       const server_data = await server_data_promise;
@@ -3037,6 +4458,7 @@ async function respond_with_error({
         event,
         fetched,
         node: default_layout,
+        // eslint-disable-next-line @typescript-eslint/require-await
         parent: async () => ({}),
         resolve_opts,
         server_data_promise,
@@ -3087,8 +4509,7 @@ function once(fn) {
   let done = false;
   let result;
   return () => {
-    if (done)
-      return result;
+    if (done) return result;
     done = true;
     return result = fn();
   };
@@ -3226,6 +4647,9 @@ function get_data_json(event, options2, nodes) {
   let count = 0;
   const { iterator, push, done } = create_async_iterator();
   const reducers = {
+    ...Object.fromEntries(
+      Object.entries(options2.hooks.transport).map(([key2, value]) => [key2, value.encode])
+    ),
     /** @param {any} thing */
     Promise: (thing) => {
       if (typeof thing?.then === "function") {
@@ -3249,7 +4673,7 @@ function get_data_json(event, options2, nodes) {
             let str;
             try {
               str = stringify(value, reducers);
-            } catch (e) {
+            } catch {
               const error = await handle_error_and_jsonify(
                 event,
                 options2,
@@ -3261,8 +4685,7 @@ function get_data_json(event, options2, nodes) {
             count -= 1;
             push(`{"type":"chunk","id":${id},"${key2}":${str}}
 `);
-            if (count === 0)
-              done();
+            if (count === 0) done();
           }
         );
         return id;
@@ -3271,8 +4694,7 @@ function get_data_json(event, options2, nodes) {
   };
   try {
     const strings = nodes.map((node) => {
-      if (!node)
-        return "null";
+      if (!node) return "null";
       if (node.type === "error" || node.type === "skip") {
         return JSON.stringify(node);
       }
@@ -3348,6 +4770,7 @@ async function render_page(event, page, options2, manifest, state, resolve_opts)
     state.prerender_default = should_prerender;
     const fetched = [];
     if (get_option(nodes, "ssr") === false && !(state.prerendering && should_prerender_data)) {
+      if (BROWSER && action_result && !event.request.headers.has("x-sveltekit-action")) ;
       return await render_response({
         branch: [],
         fetched,
@@ -3383,8 +4806,7 @@ async function render_page(event, page, options2, manifest, state, resolve_opts)
               const data = {};
               for (let j = 0; j < i; j += 1) {
                 const parent = await server_promises[j];
-                if (parent)
-                  Object.assign(data, await parent.data);
+                if (parent) Object.assign(data, parent.data);
               }
               return data;
             }
@@ -3398,8 +4820,7 @@ async function render_page(event, page, options2, manifest, state, resolve_opts)
     });
     const csr = get_option(nodes, "csr") ?? true;
     const load_promises = nodes.map((node, i) => {
-      if (load_error)
-        throw load_error;
+      if (load_error) throw load_error;
       return Promise.resolve().then(async () => {
         try {
           return await load_data({
@@ -3425,12 +4846,10 @@ async function render_page(event, page, options2, manifest, state, resolve_opts)
         }
       });
     });
-    for (const p of server_promises)
-      p.catch(() => {
-      });
-    for (const p of load_promises)
-      p.catch(() => {
-      });
+    for (const p of server_promises) p.catch(() => {
+    });
+    for (const p of load_promises) p.catch(() => {
+    });
     for (let i = 0; i < nodes.length; i += 1) {
       const node = nodes[i];
       if (node) {
@@ -3463,8 +4882,7 @@ async function render_page(event, page, options2, manifest, state, resolve_opts)
               );
               const node2 = await manifest._.nodes[index]();
               let j = i;
-              while (!branch[j])
-                j -= 1;
+              while (!branch[j]) j -= 1;
               return await render_response({
                 event,
                 options: options2,
@@ -3547,8 +4965,7 @@ function exec(match, params, matchers) {
       buffered = 0;
     }
     if (value === void 0) {
-      if (param.rest)
-        result[param.name] = "";
+      if (param.rest) result[param.name] = "";
       continue;
     }
     if (!param.matcher || matchers[param.matcher](value)) {
@@ -3569,10 +4986,10 @@ function exec(match, params, matchers) {
     }
     return;
   }
-  if (buffered)
-    return;
+  if (buffered) return;
   return result;
 }
+const INVALID_COOKIE_CHARACTER_REGEX = /[\x00-\x1F\x7F()<>@,;:"/[\]?={} \t]/;
 function validate_options(options2) {
   if (options2?.path === void 0) {
     throw new Error("You must specify a `path` when setting, deleting or serializing cookies");
@@ -3602,8 +5019,7 @@ function get_cookies(request, url, trailing_slash) {
       if (c && domain_matches(url.hostname, c.options.domain) && path_matches(url.pathname, c.options.path)) {
         return c.value;
       }
-      const decoder = opts?.decode || decodeURIComponent;
-      const req_cookies = cookieExports.parse(header, { decode: decoder });
+      const req_cookies = cookieExports.parse(header, { decode: opts?.decode });
       const cookie = req_cookies[name];
       return cookie;
     },
@@ -3611,8 +5027,7 @@ function get_cookies(request, url, trailing_slash) {
      * @param {import('cookie').CookieParseOptions} opts
      */
     getAll(opts) {
-      const decoder = opts?.decode || decodeURIComponent;
-      const cookies2 = cookieExports.parse(header, { decode: decoder });
+      const cookies2 = cookieExports.parse(header, { decode: opts?.decode });
       for (const c of Object.values(new_cookies)) {
         if (domain_matches(url.hostname, c.options.domain) && path_matches(url.pathname, c.options.path)) {
           cookies2[c.name] = c.value;
@@ -3626,6 +5041,14 @@ function get_cookies(request, url, trailing_slash) {
      * @param {import('./page/types.js').Cookie['options']} options
      */
     set(name, value, options2) {
+      const illegal_characters = name.match(INVALID_COOKIE_CHARACTER_REGEX);
+      if (illegal_characters) {
+        console.warn(
+          `The cookie name "${name}" will be invalid in SvelteKit 3.0 as it contains ${illegal_characters.join(
+            " and "
+          )}. See RFC 2616 for more details https://datatracker.ietf.org/doc/html/rfc2616#section-2.2`
+        );
+      }
       validate_options(options2);
       set_internal(name, value, { ...defaults, ...options2 });
     },
@@ -3658,10 +5081,8 @@ function get_cookies(request, url, trailing_slash) {
     };
     for (const key2 in new_cookies) {
       const cookie = new_cookies[key2];
-      if (!domain_matches(destination.hostname, cookie.options.domain))
-        continue;
-      if (!path_matches(destination.pathname, cookie.options.path))
-        continue;
+      if (!domain_matches(destination.hostname, cookie.options.domain)) continue;
+      if (!path_matches(destination.pathname, cookie.options.path)) continue;
       const encoder2 = cookie.options.encode || encodeURIComponent;
       combined_cookies[cookie.name] = encoder2(cookie.value);
     }
@@ -3683,19 +5104,15 @@ function get_cookies(request, url, trailing_slash) {
   return { cookies, new_cookies, get_cookie_header, set_internal };
 }
 function domain_matches(hostname, constraint) {
-  if (!constraint)
-    return true;
+  if (!constraint) return true;
   const normalized = constraint[0] === "." ? constraint.slice(1) : constraint;
-  if (hostname === normalized)
-    return true;
+  if (hostname === normalized) return true;
   return hostname.endsWith("." + normalized);
 }
 function path_matches(path, constraint) {
-  if (!constraint)
-    return true;
+  if (!constraint) return true;
   const normalized = constraint.endsWith("/") ? constraint.slice(0, -1) : constraint;
-  if (path === normalized)
-    return true;
+  if (path === normalized) return true;
   return path.startsWith(normalized + "/");
 }
 function add_cookies_to_headers(headers2, cookies) {
@@ -3732,8 +5149,7 @@ function create_fetch({ event, options: options2, manifest, state, get_cookie_he
         if (url.origin !== event.url.origin) {
           if (`.${url.hostname}`.endsWith(`.${event.url.hostname}`) && credentials !== "omit") {
             const cookie = get_cookie_header(url, request.headers.get("cookie"));
-            if (cookie)
-              request.headers.set("cookie", cookie);
+            if (cookie) request.headers.set("cookie", cookie);
           }
           return fetch(request);
         }
@@ -3741,14 +5157,23 @@ function create_fetch({ event, options: options2, manifest, state, get_cookie_he
         const decoded = decodeURIComponent(url.pathname);
         const filename = (decoded.startsWith(prefix) ? decoded.slice(prefix.length) : decoded).slice(1);
         const filename_html = `${filename}/index.html`;
-        const is_asset = manifest.assets.has(filename);
-        const is_asset_html = manifest.assets.has(filename_html);
+        const is_asset = manifest.assets.has(filename) || filename in manifest._.server_assets;
+        const is_asset_html = manifest.assets.has(filename_html) || filename_html in manifest._.server_assets;
         if (is_asset || is_asset_html) {
           const file = is_asset ? filename : filename_html;
           if (state.read) {
             const type = is_asset ? manifest.mimeTypes[filename.slice(filename.lastIndexOf("."))] : "text/html";
             return new Response(state.read(file), {
               headers: type ? { "content-type": type } : {}
+            });
+          } else if (read_implementation && file in manifest._.server_assets) {
+            const length = manifest._.server_assets[file];
+            const type = manifest.mimeTypes[file.slice(file.lastIndexOf("."))];
+            return new Response(read_implementation(file), {
+              headers: {
+                "Content-Length": "" + length,
+                "Content-Type": type
+              }
             });
           }
           return await fetch(request);
@@ -3780,10 +5205,13 @@ function create_fetch({ event, options: options2, manifest, state, get_cookie_he
         const set_cookie = response.headers.get("set-cookie");
         if (set_cookie) {
           for (const str of setCookieExports.splitCookiesString(set_cookie)) {
-            const { name, value, ...options3 } = setCookieExports.parseString(str);
+            const { name, value, ...options3 } = setCookieExports.parseString(str, {
+              decodeValues: false
+            });
             const path = options3.path ?? (url.pathname.split("/").slice(0, -1).join("/") || "/");
             set_internal(name, value, {
               path,
+              encode: (value2) => value2,
               .../** @type {import('cookie').CookieSerializeOptions} */
               options3
             });
@@ -3824,8 +5252,7 @@ function get_public_env(request) {
 function get_page_config(nodes) {
   let current = {};
   for (const node of nodes) {
-    if (!node?.universal?.config && !node?.server?.config)
-      continue;
+    if (!node?.universal?.config && !node?.server?.config) continue;
     current = {
       ...current,
       ...node?.universal?.config,
@@ -3854,10 +5281,13 @@ async function respond(request, options2, manifest, state) {
       return text(csrf_error.body.message, { status: csrf_error.status });
     }
   }
+  if (options2.hash_routing && url.pathname !== base + "/" && url.pathname !== "/[fallback]") {
+    return text("Not found", { status: 404 });
+  }
   let rerouted_path;
   try {
     rerouted_path = options2.hooks.reroute({ url: new URL(url) }) ?? url.pathname;
-  } catch (e) {
+  } catch {
     return text("Internal Server Error", {
       status: 500
     });
@@ -3880,7 +5310,9 @@ async function respond(request, options2, manifest, state) {
     return get_public_env(request);
   }
   if (decoded.startsWith(`/${options2.app_dir}`)) {
-    return text("Not found", { status: 404 });
+    const headers22 = new Headers();
+    headers22.set("cache-control", "public, max-age=0, must-revalidate");
+    return text("Not found", { status: 404, headers: headers22 });
   }
   const is_data_request = has_data_suffix(decoded);
   let invalidated_data_nodes;
@@ -3895,8 +5327,7 @@ async function respond(request, options2, manifest, state) {
     const matchers = await manifest._.matchers();
     for (const candidate of manifest._.routes) {
       const match = candidate.pattern.exec(decoded);
-      if (!match)
-        continue;
+      if (!match) continue;
       const matched = exec(match, candidate.params, matchers);
       if (matched) {
         route = candidate;
@@ -3957,14 +5388,12 @@ async function respond(request, options2, manifest, state) {
         trailing_slash = "always";
       } else if (route.page) {
         const nodes = await load_page_nodes(route.page, manifest);
-        if (DEV)
-          ;
+        if (BROWSER) ;
         trailing_slash = get_option(nodes, "trailingSlash");
       } else if (route.endpoint) {
         const node = await route.endpoint();
         trailing_slash = node.trailingSlash;
-        if (DEV)
-          ;
+        if (BROWSER) ;
       }
       if (!is_data_request) {
         const normalized = normalize_path(url.pathname, trailing_slash ?? "never");
@@ -4000,6 +5429,11 @@ async function respond(request, options2, manifest, state) {
           event.platform = await state.emulator.platform({ config, prerender });
         }
       }
+    } else if (state.emulator?.platform) {
+      event.platform = await state.emulator.platform({
+        config: {},
+        prerender: !!state.prerendering?.fallback
+      });
     }
     const { cookies, new_cookies, get_cookie_header, set_internal } = get_cookies(
       request,
@@ -4016,8 +5450,7 @@ async function respond(request, options2, manifest, state) {
       get_cookie_header,
       set_internal
     });
-    if (state.prerendering && !state.prerendering.fallback)
-      disable_search(url);
+    if (state.prerendering && !state.prerendering.fallback) disable_search(url);
     const response = await options2.hooks.handle({
       event,
       resolve: (event2, opts) => resolve2(event2, opts).then((response2) => {
@@ -4056,8 +5489,7 @@ async function respond(request, options2, manifest, state) {
           "set-cookie"
         ]) {
           const value = response.headers.get(key2);
-          if (value)
-            headers22.set(key2, value);
+          if (value) headers22.set(key2, value);
         }
         return new Response(void 0, {
           status: 304,
@@ -4093,7 +5525,7 @@ async function respond(request, options2, manifest, state) {
           preload: opts.preload || default_preload
         };
       }
-      if (state.prerendering?.fallback) {
+      if (options2.hash_routing || state.prerendering?.fallback) {
         return await render_response({
           event: event2,
           options: options2,
@@ -4222,6 +5654,7 @@ function filter_public_env(env, { public_prefix, private_prefix }) {
     )
   );
 }
+let init_promise;
 class Server {
   /** @type {import('types').SSROptions} */
   #options;
@@ -4249,7 +5682,10 @@ class Server {
       public_env2
     );
     set_safe_public_env(public_env2);
-    if (!this.#options.hooks) {
+    if (read) {
+      set_read_implementation(read);
+    }
+    await (init_promise ??= (async () => {
       try {
         const module = await get_hooks();
         this.#options.hooks = {
@@ -4257,14 +5693,18 @@ class Server {
           handleError: module.handleError || (({ error }) => console.error(error)),
           handleFetch: module.handleFetch || (({ request, fetch: fetch2 }) => fetch2(request)),
           reroute: module.reroute || (() => {
-          })
+          }),
+          transport: module.transport || {}
         };
+        if (module.init) {
+          await module.init();
+        }
       } catch (error) {
         {
           throw error;
         }
       }
-    }
+    })());
   }
   /**
    * @param {Request} request
