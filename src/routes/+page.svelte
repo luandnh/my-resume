@@ -4,6 +4,7 @@
 	import Education from '$lib/components/Education.svelte';
 	import Sidebar from '$lib/components/Sidebar.svelte';
 	import Skills from '$lib/components/Skills.svelte';
+	import ToggleMode from '$lib/components/ToggleMode.svelte';
 	import WorkExperience from '$lib/components/WorkExperience.svelte';
 	import { onMount } from 'svelte';
 
@@ -41,6 +42,9 @@
 			<!-- Content -->
 			<div class="col-12 col-md-12 col-xl-9">
 				<div class="box-outer">
+					<div class="nav-container">
+						<ToggleMode />
+					</div>
 					<!-- About -->
 					<div class="pb-0 pb-sm-2">
 						<h1 class="title title--h1 title__separate">About Me</h1>
