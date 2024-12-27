@@ -11,22 +11,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup Resource
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: 18
-          cache: npm
+          bun-version: latest
+          cache: true
 
       - name: Install Package
-        run: npm install
+        run: bun install
 
       - name: Build
         run: |
           export NODE_OPTIONS="--max_old_space_size=4096"
-          npm run build
+          bun run build
           cp package.json build
-          cp package-lock.json build
+          cp bun.lockb build
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
