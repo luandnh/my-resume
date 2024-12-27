@@ -2,7 +2,7 @@ import { c as pop, e as ensure_array_like, p as push } from './index-BcvDYVOv.js
 import { e as escape_html } from './escaping-BQR1pbqy.js';
 
 function AboutMe($$payload) {
-  $$payload.out += `<p>I'm Luan, an experienced full-stack developer specializing in a range of technologies.
+  $$payload.out += `<p>I'm <span class="fw-bold">Luan</span>, an experienced full-stack developer specializing in a range of technologies.
     I am currently working on developing solutions in the areas of contact center and call
     center functionality as well as API microservices, streaming platforms and their
     integration with machine learning applications.</p> <p>My career has been characterized by a tireless pursuit of improving my skills. I
@@ -20,7 +20,7 @@ function Sidebar($$payload) {
   $$payload.out += `<div class="sidebar box-outer sticky-column"><div class="sidebar__base-info"><figure class="avatar-box"><img src="images/my-avatar.png" alt="Hoàng Luân"></figure> <div class="text-xl-center"><h3 class="title title--h3 sidebar__name">Hoàng Luân</h3> <div class="badge">Backend Developer</div></div> <button class="btn btn--small btn--icon-right sidebar__btn js-btn-toggle"><span>Show Contacts</span><i class="feathericon-chevron-down"></i></button></div> <div class="sidebar__additional-info js-show"><div class="separation"></div> <ul class="details-info"><li class="details-info__item"><span class="box icon-box"><i class="font-icon icon-envelope"></i></span> <div class="contacts-block__info"><span class="overhead">Email</span> <a class="text-overflow" href="mailto:luandnh98@gmail.com" title="luandnh98@gmail.com">luandnh98@gmail.com</a></div></li> <li class="details-info__item"><span class="box icon-box"><i class="font-icon icon-phone"></i></span> <div class="contacts-block__info"><span class="overhead">Phone</span> <span class="text-overflow" title="0899 452 898">0899 452 898</span></div></li> <li class="details-info__item"><span class="box icon-box"><i class="font-icon icon-calendar"></i></span> <div class="contacts-block__info"><span class="overhead">Birthday</span> <span class="text-overflow" title="March 3, 1998">March 3, 1998</span></div></li> <li class="details-info__item"><span class="box icon-box"><i class="font-icon icon-location"></i></span> <div class="contacts-block__info"><span class="overhead">Location</span> <span class="text-overflow" title="Ho Chi Minh, Vietnam">Ho Chi Minh, Vietnam</span></div></li></ul> <div class="separation d-xl-none"></div> <div class="social"><a class="social__link" href="https://github.com/luandnh" aria-label="GitHub"><i class="feathericon-github"></i></a> <a class="social__link" href="https://www.linkedin.com/in/luandnh/" aria-label="Linkedin"><i class="feathericon-linkedin"></i></a> <a class="social__link" href="https://www.facebook.com/luandnh98" aria-label="Facebook"><i class="feathericon-facebook"></i></a></div></div></div>`;
 }
 function Skills($$payload) {
-  $$payload.out += `<div class="box box-inner mb-0"><div class="row"><div class="col-lg-6"><p class="fw-bold">Backend</p> <ul><li>Golang, Gin, Bun</li> <li>Rest APIs, gRPC, Websocket</li></ul> <p class="fw-bold">Frontend</p> <ul><li>Svelte, SvelteKit, SvelteStrap</li> <li>Bootstrap 5</li> <li>HTML5, CSS3</li></ul> <p class="fw-bold">Database</p> <ul><li>PostgreSQL, MySQL, MariaDB</li> <li>Elasticsearch, MongoDB</li></ul> <p class="fw-bold">Caching</p> <ul><li>Redis</li> <li>Memcache</li></ul></div> <div class="col-lg-6"><p class="fw-bold">CI/CD</p> <ul><li>Github Action</li> <li>Jenkins</li></ul> <p class="fw-bold">Message Queue</p> <ul><li>Redis PubSub</li> <li>RabbitMQ</li></ul> <p class="fw-bold">Other</p> <ul><li>Docker, Portainer</li> <li>Traefik</li> <li>Debezium</li> <li>Sentry</li></ul></div></div></div>`;
+  $$payload.out += `<div class="box box-inner mb-0"><div class="row"><div class="col-lg-6"><p class="fw-bold">Backend</p> <ul><li>Golang, Gin, Bun</li> <li>Rest APIs, gRPC, Websocket</li></ul> <p class="fw-bold">Database</p> <ul><li>PostgreSQL, MySQL, MariaDB</li> <li>Elasticsearch, MongoDB</li></ul> <p class="fw-bold">Caching</p> <ul><li>Redis</li> <li>Memcache</li></ul> <p class="fw-bold">CI/CD</p> <ul><li>Github Action</li> <li>Jenkins</li></ul></div> <div class="col-lg-6"><p class="fw-bold">Message Queue</p> <ul><li>Redis PubSub</li> <li>RabbitMQ</li></ul> <p class="fw-bold">Other</p> <ul><li>Docker, Portainer</li> <li>Traefik</li> <li>Debezium</li> <li>Sentry</li></ul> <p class="fw-bold">Frontend</p> <ul><li>Svelte, SvelteKit, SvelteStrap</li> <li>Bootstrap 5</li> <li>HTML5, CSS3</li></ul></div></div></div>`;
 }
 function WorkExperience($$payload) {
   const each_array = ensure_array_like([
@@ -120,7 +120,7 @@ function WorkExperience($$payload) {
     let tech = each_array_3[$$index_3];
     $$payload.out += `<span class="badge fw-bold me-1 mb-2">${escape_html(tech)}</span>`;
   }
-  $$payload.out += `<!--]--></div></li></ul></article> <article class="timeline__item"><h5 class="title title--h4 timeline__title">Wisky</h5> <span class="timeline__period">12/2019 - 06/2020</span> <h4 class="title title--h4">Intern Full Stack Developer</h4> <div class="mb-2"><span class="timeline__period">2020 — 2023</span></div> <span class="fw-bold">Responsibilities:</span> <ul><li>Develop and maintain front-end and back-end components of web applications</li> <li>Design and develop RESTful APIs to facilitate communication between front-end and back-end
+  $$payload.out += `<!--]--></div></li></ul></article> <article class="timeline__item"><h5 class="title title--h4 timeline__title">Wisky</h5> <span class="timeline__period">12/2019 - 06/2020</span> <h4 class="title title--h4">Intern Full Stack Developer</h4> <span class="fw-bold">Responsibilities:</span> <ul><li>Develop and maintain front-end and back-end components of web applications</li> <li>Design and develop RESTful APIs to facilitate communication between front-end and back-end
 			systems.</li> <li>Write clean, efficient, and maintainable code according to best practices and coding
 			standards.</li></ul> <div><span class="fw-bold">Technologies:</span></div> <div><!--[-->`;
   for (let $$index_4 = 0, $$length = each_array_4.length; $$index_4 < $$length; $$index_4++) {
@@ -148,4 +148,4 @@ function _page($$payload, $$props) {
 }
 
 export { _page as default };
-//# sourceMappingURL=_page.svelte-CmugBTF3.js.map
+//# sourceMappingURL=_page.svelte-BrdYCSI0.js.map
