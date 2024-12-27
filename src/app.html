@@ -2,11 +2,57 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>[LuanDNH] - My Resume</title>
+		<!-- Favicons -->
+		<link rel="apple-touch-icon" href="%sveltekit.assets%/images/apple-touch-icon.png" />
+
+		<link rel="shortcut icon" href="%sveltekit.assets%/images/favicon.ico" type="image/x-icon" />
+
+		<!-- Styles -->
+		<link rel="stylesheet" type="text/css" href="%sveltekit.assets%/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="%sveltekit.assets%/css/style.css" />
+
+		<style type="text/css">
+			.medium-zoom-overlay {
+				position: fixed;
+				top: 0;
+				right: 0;
+				bottom: 0;
+				left: 0;
+				opacity: 0;
+				transition: opacity 0.3s;
+				will-change: opacity;
+			}
+			.medium-zoom--opened .medium-zoom-overlay {
+				cursor: pointer;
+				cursor: zoom-out;
+				opacity: 1;
+			}
+			.medium-zoom-image {
+				cursor: pointer;
+				cursor: zoom-in;
+				transition: transform 0.3s cubic-bezier(0.2, 0, 0.2, 1) !important;
+			}
+			.medium-zoom-image--hidden {
+				visibility: hidden;
+			}
+			.medium-zoom-image--opened {
+				position: relative;
+				cursor: pointer;
+				cursor: zoom-out;
+				will-change: transform;
+			}
+		</style>
+
 		%sveltekit.head%
 	</head>
-	<body data-sveltekit-preload-data="hover">
+	<body data-sveltekit-preload-data="hover"  class="bg-triangles">
 		<div style="display: contents">%sveltekit.body%</div>
+
+		<!-- JavaScripts -->
+		<script src="%sveltekit.assets%/js/jquery-3.4.1.min.js"></script>
+		<script src="%sveltekit.assets%/js/plugins.min.js"></script>
+		<script src="%sveltekit.assets%/js/common.js"></script>
 	</body>
 </html>
