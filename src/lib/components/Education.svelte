@@ -9,7 +9,7 @@
 	<!-- Item -->
 	<article class="timeline__item">
 		<h5 class="title title--h4 timeline__title">Bachelor of Information Assurance</h5>
-		<span class="timeline__period">2016 — 2020</span>
+		<span class="timeline__period">Oct 2016 — May 2020</span>
 		<p class="timeline__description">FPT University</p>
 	</article>
 </div>

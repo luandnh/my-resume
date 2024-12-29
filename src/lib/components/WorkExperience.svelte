@@ -1,7 +1,7 @@
 <!-- Item -->
 <article class="timeline__item">
 	<h3 class="title title--h3 timeline__title">TEL4VN</h3>
-	<span class="timeline__period">2020 — 02/2025</span>
+	<span class="timeline__period">2020 — Feb 2025</span>
 	<div class="timeline__description mb-2">
 		<span class="fw-bold">TEL4VN</span> is a leading company specializing in telecommunications solutions
 		such as callcenter, autocall, and contact center services. With expertise in integrating automated
@@ -140,7 +140,7 @@
 <!-- Item -->
 <article class="timeline__item">
 	<h5 class="title title--h4 timeline__title">Wisky</h5>
-	<span class="timeline__period">12/2019 - 06/2020</span>
+	<span class="timeline__period">Dev 2019 - Jun 2020</span>
 	<h4 class="title title--h4">Intern Full Stack Developer</h4>
 	<span class="fw-bold">Responsibilities:</span>
 	<ul>

@@ -60,11 +60,21 @@
 			<a class="social__link" href="https://github.com/luandnh" aria-label="GitHub">
 				<i class="feathericon-github"></i>
 			</a>
-    			<a class="social__link" href="https://www.linkedin.com/in/luandnh/" aria-label="Linkedin">
+			<a class="social__link" href="https://www.linkedin.com/in/luandnh/" aria-label="Linkedin">
 				<i class="feathericon-linkedin"></i>
 			</a>
-            <a class="social__link" href="https://www.facebook.com/luandnh98" aria-label="Facebook">
+			<a class="social__link" href="https://www.facebook.com/luandnh98" aria-label="Facebook">
 				<i class="feathericon-facebook"></i>
+			</a>
+		</div>
+
+		<div class="separation d-xl-none"></div>
+
+		<!-- Download CV button -->
+		<div class="justify-content-center text-center mt-3 ">
+			<a class="btn" href="docs/LuanDNH-BackendEngineer.pdf" target="_blank" aria-label="Download CV">
+				<span class="btn__text">Download CV</span>
+				<span class="btn__icon"><i class="font-icon icon-download"></i></span>
 			</a>
 		</div>
 	</div>
