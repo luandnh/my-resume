@@ -125,7 +125,7 @@ function WorkExperience($$payload) {
     let tech = each_array_3[$$index_3];
     $$payload.out += `<span class="badge fw-bold me-1 mb-2">${escape_html(tech)}</span>`;
   }
-  $$payload.out += `<!--]--></div></li></ul></article> <article class="timeline__item"><h5 class="title title--h4 timeline__title">Wisky</h5> <span class="timeline__period">Dev 2019 - Jun 2020</span> <h4 class="title title--h4">Intern Full Stack Developer</h4> <span class="fw-bold">Responsibilities:</span> <ul><li>Develop and maintain front-end and back-end components of web applications</li> <li>Design and develop RESTful APIs to facilitate communication between front-end and back-end
+  $$payload.out += `<!--]--></div></li></ul></article> <article class="timeline__item"><h5 class="title title--h4 timeline__title">Wisky</h5> <span class="timeline__period">Dec 2019 - Jun 2020</span> <h4 class="title title--h4">Intern Full Stack Developer</h4> <span class="fw-bold">Responsibilities:</span> <ul><li>Develop and maintain front-end and back-end components of web applications</li> <li>Design and develop RESTful APIs to facilitate communication between front-end and back-end
 			systems.</li> <li>Write clean, efficient, and maintainable code according to best practices and coding
 			standards.</li></ul> <div><span class="fw-bold">Technologies:</span></div> <div><!--[-->`;
   for (let $$index_4 = 0, $$length = each_array_4.length; $$index_4 < $$length; $$index_4++) {
@@ -155,4 +155,4 @@ function _page($$payload, $$props) {
 }
 
 export { _page as default };
-//# sourceMappingURL=_page.svelte-BLJCk0s9.js.map
+//# sourceMappingURL=_page.svelte-DhhqLLa5.js.map
