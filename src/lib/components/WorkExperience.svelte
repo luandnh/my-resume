@@ -140,7 +140,7 @@
 <!-- Item -->
 <article class="timeline__item">
 	<h5 class="title title--h4 timeline__title">Wisky</h5>
-	<span class="timeline__period">Dev 2019 - Jun 2020</span>
+	<span class="timeline__period">Dec 2019 - Jun 2020</span>
 	<h4 class="title title--h4">Intern Full Stack Developer</h4>
 	<span class="fw-bold">Responsibilities:</span>
 	<ul>
