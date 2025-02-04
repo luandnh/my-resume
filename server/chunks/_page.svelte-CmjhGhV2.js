@@ -2,13 +2,9 @@ import { c as pop, e as ensure_array_like, p as push } from './index-BcvDYVOv.js
 import { e as escape_html } from './escaping-BQR1pbqy.js';
 
 function AboutMe($$payload) {
-  $$payload.out += `<p>I'm <span class="fw-bold">Luan</span>, an experienced full-stack developer specializing in a range of technologies.
-    I am currently working on developing solutions in the areas of contact center and call
-    center functionality as well as API microservices, streaming platforms and their
-    integration with machine learning applications.</p> <p>My career has been characterized by a tireless pursuit of improving my skills. I
-    actively work on mastering new technologies like Svelte, JavaScript, Docker,
-    Continuous Integration/Continuous Deployment (CI/CD) practices, and Jenkins to improve
-    my skills as a full-stack developer.</p>`;
+  $$payload.out += `<p>Backend Software Engineer with <span class="fw-bold">more than 4 years of experience</span> in
+	building scalable, high performance for <span class="fw-bold">CallCenter, CRM and integrated softwares</span>, processing <span class="fw-bold">several million events per day</span>.</p> <p>I am currently pursuing a <span class="fw-bold">Master's degree in Software Engineering</span>,
+	with the goal of deepening my knowledge and expertise in the fields of <span class="fw-bold">Artificial Intelligence, Machine Learning, and Blockchain technology</span>.</p>`;
 }
 function Certificates($$payload) {
   $$payload.out += `<div class="row"><div class="col-12 col-lg-6"><div class="case-item box box-inner"><img class="case-item__icon" src="images/project.png" alt=""> <div><h3 class="title title--h3">Agile Project Management</h3> <div class="case-item__caption"><div>University of Colorado Boulder</div> <div>Issued Oct 2024</div> <div>Credential ID 6WK2LTFUL5GL</div> <div><a href="https://www.coursera.org/account/accomplishments/records/6WK2LTFUL5GL" target="_blank">View Certificate</a></div></div></div></div></div> <div class="col-12 col-lg-6"><div class="case-item box box-inner"><img class="case-item__icon" src="images/project.png" alt=""> <div><h3 class="title title--h3">Project Management Specialization</h3> <div class="case-item__caption"><div>University of Colorado Boulder</div> <div>Issued Oct 2024</div> <div>Credential ID SE2T1RO2AIJT</div> <div><a href="https://www.coursera.org/account/accomplishments/specialization/SE2T1RO2AIJT" target="_blank">View Certificate</a></div></div></div></div></div></div>`;
@@ -155,4 +151,4 @@ function _page($$payload, $$props) {
 }
 
 export { _page as default };
-//# sourceMappingURL=_page.svelte-DhhqLLa5.js.map
+//# sourceMappingURL=_page.svelte-CmjhGhV2.js.map
